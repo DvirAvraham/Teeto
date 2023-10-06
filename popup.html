@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="tabs">
+    <button class="tab-button active" data-tab="endpoints">Endpoints</button>
+    <button class="tab-button" data-tab="secrets">Secrets</button>
+  </div>
+  <div class="tab-content" id="endpoints">
+    <div id="results" style="display: none;"></div>
+    <div class="btn-group">
+      <button id="find-endpoints">Find Endpoints</button>
+      <button id="copy-all" style="display: none;">Copy All URLs</button>
+      <button id="clear-results" style="display: none;">Clear Results</button>
+    </div>
+  </div>
+  <div class="tab-content" id="secrets" style="display: none;">
+    <!-- Content for secrets goes here -->
+    <button id="find-secrets">Find Secrets</button>
+
+  </div>
+  <script src="popup.js"></script>
+
+</body>
+
+</html>
