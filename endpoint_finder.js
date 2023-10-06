@@ -13,8 +13,10 @@ const nodeModulesRegex = /node_modules/;
 
 function addResult(path, source) {
   var absoluteUrl = path.startsWith('/') ? baseUrl + path : path;
-  if (!nodeModulesRegex.test(absoluteUrl)) {
-    results.add({endpoint: absoluteUrl, source: source});
+  absoluteUrl = deleteTrailingSlashes(absoluteUrl)
+  const exists = Array.from(results).some(result => result.endpoint === absoluteUrl);
+  if (!nodeModulesRegex.test(absoluteUrl) && !exists) {
+    results.add({ endpoint: absoluteUrl, source: source });
   }
 }
 
@@ -27,7 +29,8 @@ function fetchAndTestRegex(scriptSrc) {
       for(let regex of regexList) {
         var matches = scriptContent.matchAll(regex);
         for(let match of matches) {
-          addResult(match[0], scriptSrc);
+          const isSlash = isItSlashe(match[0])
+          if ( !isSlash && baseUrl !== match[0] ) addResult(match[0], scriptSrc);
         }
       }
     })
@@ -53,14 +56,25 @@ for(let regex of regexList) {
 }
 
 function writeResults(){
-  var output = [];
-  results.forEach(function(res){
-    output.push(res);
+  const output =  Array.from(results).sort(function(a, b) {
+    return a.endpoint.localeCompare(b.endpoint);
   });
   return output;
 }
 
-new Promise(resolve => setTimeout(resolve, 3e3)).then(() => chrome.runtime.sendMessage({action: "returnResults", data: writeResults()}));
-
-
+new Promise(resolve => setTimeout(resolve, 3e3)).then(() => 
+chrome.runtime.sendMessage({action: "returnResults", data: writeResults()}))
 })();
+
+function deleteTrailingSlashes(url) {
+  if (!url) return url; 
+  if (url.charAt(url.length - 1) === '/') {
+    return deleteTrailingSlashes(url.slice(0, -1));
+  }
+  return url;
+}
+
+function isItSlashe(url){
+  const regex = /^[\/\\]+$/; 
+  return regex.test(url);
+}

@@ -18,6 +18,8 @@ document.querySelectorAll('.tab-button').forEach(button => {
 });
 
 document.getElementById('find-endpoints').addEventListener('click', function() {
+  document.getElementById('find-endpoints').style.display = "none"
+  document.getElementById('loader').style.display = "block"
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const activeTab = tabs[0];
 
@@ -35,7 +37,10 @@ document.getElementById('copy-all').addEventListener('click', function () {
   chrome.storage.local.get(['endpoints'], function (result) {
     var text = result.endpoints.map(e => e.endpoint).join('\n');
     navigator.clipboard.writeText(text).then(function () {
-      alert('URLs copied to clipboard!');
+      document.getElementById('copy-msg').style.display = 'block'
+      setTimeout(()=>{
+        document.getElementById('copy-msg').style.display = 'none'
+      },1000)
     });
   });
 });
@@ -102,6 +107,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     var resultsDiv = document.getElementById('results');
     resultsDiv.textContent = '';
     resultsDiv.style.display = 'block';
+    document.getElementById('loader').style.display = "none"
+    document.getElementById('find-endpoints').style.display = "block"
     document.getElementById('copy-all').style.display = 'block';
     document.getElementById('clear-results').style.display = 'block';
     let uniqueEndpoints = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
