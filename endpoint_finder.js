@@ -76,16 +76,13 @@ function fetchAndTestRegex(scriptSrc) {
           if ( !isSlash && baseUrl !== match[0] ) addPath(match[0], scriptSrc);
         }
       }
-      let count = 0
       for (const regex of secretsRegex) {
-        console.log(count);
-        count++
         const value = Object.values(regex)[0]; 
         const key = Object.keys(regex)[0]; 
         var matches = scriptContent.matchAll(value);
 
         for(const match of matches) {
-           console.log(match[0]);
+           console.log(key+' ---> '+match[0]);
         }
       }
     })
