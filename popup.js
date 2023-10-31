@@ -136,12 +136,13 @@ chrome.storage.local.get(['endpoints'], function (result) {
 
 // load previous secrets
 chrome.storage.local.get(['secrets'], function (result) {
+  console.log('result 123', result);
   var secretsDiv = document.getElementById('secrets-results');
 
   if (result.secrets && result.secrets.length > 0) {
     secretsDiv.style.display = 'block';
-    document.getElementById('copy-all-secrets').style.display = 'block';
-    document.getElementById('clear-secrets-results').style.display = 'block';
+    // document.getElementById('copy-all-secrets').style.display = 'block';
+    // document.getElementById('clear-secrets-results').style.display = 'block';
 
     result.secrets.forEach(function (secretObj) {
       appendSecretToResultsDiv(secretObj, secretsDiv);
