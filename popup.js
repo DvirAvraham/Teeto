@@ -17,19 +17,25 @@ document.querySelectorAll('.tab-button').forEach(button => {
   });
 });
 
-document.getElementById('find-endpoints').addEventListener('click', function() {
+document.getElementById('find-endpoints').addEventListener('click', function () {
   document.getElementById('find-endpoints').style.display = "none"
   document.getElementById('loader').style.display = "block"
-  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const activeTab = tabs[0];
 
-    console.log('Executing endpoint_finder.js');
-
+    // First, execute endpoint_finder.js
     chrome.scripting.executeScript({
       target: { tabId: activeTab.id },
       files: ['endpoint_finder.js']
+    }, function () {
+      // Once the first script has executed, execute secrets_finder.js
+      chrome.scripting.executeScript({
+        target: { tabId: activeTab.id },
+        files: ['secrets_finder.js']
+      });
     });
   });
+
 });
 
 
@@ -38,9 +44,9 @@ document.getElementById('copy-all').addEventListener('click', function () {
     var text = result.endpoints.map(e => e.endpoint).join('\n');
     navigator.clipboard.writeText(text).then(function () {
       document.getElementById('copy-msg').style.display = 'block'
-      setTimeout(()=>{
+      setTimeout(() => {
         document.getElementById('copy-msg').style.display = 'none'
-      },1000)
+      }, 1000)
     });
   });
 });
@@ -49,7 +55,7 @@ document.getElementById('clear-results').addEventListener('click', function () {
   chrome.storage.local.set({ endpoints: [] }, function () {
     document.getElementById('results').textContent = '';
     document.getElementById('results').style.display = 'none';
-    
+
     document.getElementById('copy-all').style.display = 'none';
     document.getElementById('clear-results').style.display = 'none';
   });
@@ -62,7 +68,7 @@ function appendEndpointToResultsDiv(endpointObj, resultsDiv) {
   endpointElement.style.padding = "10px";
   endpointElement.style.marginBottom = "10px";
   endpointElement.style.borderRadius = "5px";
-  
+
   var a = document.createElement('a');
   a.classList.add('url-link');
   a.textContent = endpointObj.endpoint;
@@ -89,6 +95,29 @@ function appendEndpointToResultsDiv(endpointObj, resultsDiv) {
   resultsDiv.appendChild(endpointElement);
 }
 
+function appendSecretToResultsDiv(secretObj, secretsDiv) {
+  console.log('secretObj', secretObj);
+  let secretElement = document.createElement('div');
+  secretElement.className = 'secret';
+
+  let secretName = document.createElement('p');
+  let secretText = document.createElement('p');
+
+  secretName.textContent = secretObj.name + ': ';
+  secretName.className = 'secret-name';
+
+
+  secretText.textContent = secretObj.secret;
+  secretText.className = 'secret-text';
+
+  secretElement.appendChild(secretName);
+  secretElement.appendChild(secretText);
+
+  secretsDiv.appendChild(secretElement);
+
+}
+
+
 // load previous results
 chrome.storage.local.get(['endpoints'], function (result) {
   var resultsDiv = document.getElementById('results');
@@ -99,10 +128,35 @@ chrome.storage.local.get(['endpoints'], function (result) {
     result.endpoints.forEach(function (endpointObj) {
       appendEndpointToResultsDiv(endpointObj, resultsDiv);
     });
+  } else {
+    // If no urls are stored, display the 'No urls found.' message
+    resultsDiv.textContent = 'No urls found.';
   }
 });
 
+// load previous secrets
+chrome.storage.local.get(['secrets'], function (result) {
+  var secretsDiv = document.getElementById('secrets-results');
+
+  if (result.secrets && result.secrets.length > 0) {
+    secretsDiv.style.display = 'block';
+    document.getElementById('copy-all-secrets').style.display = 'block';
+    document.getElementById('clear-secrets-results').style.display = 'block';
+
+    result.secrets.forEach(function (secretObj) {
+      appendSecretToResultsDiv(secretObj, secretsDiv);
+    });
+  } else {
+    // If no secrets are stored, display the 'No secrets found.' message
+    secretsDiv.textContent = 'No secrets found.';
+  }
+});
+
+
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log('request', request);
+
   if (request.action === "returnResults") {
     var resultsDiv = document.getElementById('results');
     resultsDiv.textContent = '';
@@ -119,6 +173,37 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     });
   }
 });
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log('request', request);
+  if (request.action === "returnSecrets") {
+    var secretsDiv = document.getElementById('secrets-results');
+    secretsDiv.textContent = ''; // Clear the current content
+    secretsDiv.style.display = 'block';
+
+    let uniqueSecrets = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
+    console.log('uniqueSecrets', uniqueSecrets);
+    // Check if the list of secrets is empty
+    if (uniqueSecrets.length === 0) {
+      console.log('No secrets found.');
+      secretsDiv.textContent = 'No secrets found.';
+      return; // Exit the function early
+    }
+    // Hide loaders and show relevant buttons if secrets are found
+    // document.getElementById('secrets-loader').style.display = "none"
+    // document.getElementById('find-secrets').style.display = "block"
+    // document.getElementById('copy-all-secrets').style.display = 'block';
+    // document.getElementById('clear-secrets-results').style.display = 'block';
+
+
+    chrome.storage.local.set({ secrets: uniqueSecrets }, function () {
+      uniqueSecrets.forEach(function (secretObj) {
+        appendSecretToResultsDiv(secretObj, secretsDiv);
+      });
+    });
+  }
+});
+
 
 // function updateButtonVisibility() {
 //   // Check if results set has any entries

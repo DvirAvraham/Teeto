@@ -76,15 +76,15 @@ function fetchAndTestRegex(scriptSrc) {
           if ( !isSlash && baseUrl !== match[0] ) addPath(match[0], scriptSrc);
         }
       }
-      for (const regex of secretsRegex) {
-        const value = Object.values(regex)[0]; 
-        const key = Object.keys(regex)[0]; 
-        var matches = scriptContent.matchAll(value);
+      // for (const regex of secretsRegex) {
+      //   const value = Object.values(regex)[0]; 
+      //   const key = Object.keys(regex)[0]; 
+      //   var matches = scriptContent.matchAll(value);
 
-        for(const match of matches) {
-           console.log(key+' ---> '+match[0]);
-        }
-      }
+      //   for(const match of matches) {
+      //      console.log(key+' ---> '+match[0]);
+      //   }
+      // }
     })
     .catch(function(error){
       console.log("An error occurred: ",error)

@@ -6,34 +6,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="popup.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 
 <body>
+
   <div class="tabs">
     <button class="tab-button active" data-tab="endpoints">Endpoints</button>
     <button class="tab-button" data-tab="secrets">Secrets</button>
-    <button class="tab-button" data-tab="params">potential parameters</button>
+    <button class="tab-button" data-tab="params">Parameters</button>
   </div>
+
+  <img id="loader" src="imgs/loader.gif" style="display: none; height: 100%; width: 100%;">
+
+  <div class="btn-group">
+    <button class="btn" id="find-endpoints">
+      <i class="ri-search-line"></i>
+      <!-- Find Endpoints -->
+    </button>
+    <button class="btn" id="copy-all" style="display: none;">
+      <i class="ri-file-copy-line"></i>
+      <!-- Copy All URLs -->
+    </button>
+
+    <div id="copy-msg" style="display: none; "> Copied</div>
+
+    <button class="btn" id="clear-results" style="display: none; ">
+      <i class="ri-delete-bin-7-line"></i>
+      <!-- Clear Results -->
+    </button>
+  </div>
+
   <div class="tab-content" id="endpoints">
     <div id="results" style="display: none;"></div>
-    <div class="btn-group">
-      <button id="find-endpoints">Find Endpoints</button>
-      <img id="loader" src="imgs/loader.gif" style="display: none; height: 100%; width: 100%;">
-      <button id="copy-all" style="display: none;">Copy All URLs</button>
-      <div id="copy-msg" style="display: none; "> Copied :)</div>
-      <button id="clear-results" style="display: none; ">Clear Results</button>
-    </div>
   </div>
-  <div class="tab-content" id="secrets" style="display: none;">
-    <!-- Content for secrets goes here -->
-    <button id="find-secrets">Find Secrets</button>
 
+  <div class="tab-content" id="secrets" style="display: none;">
+    <div id="secrets-results" style="display: none;"></div>
   </div>
+
   <div class="tab-content" id="params" style="display: none;">
     <!-- Content for params goes here -->
-    <button id="find-params">Get All Params</button>
-
+    <!-- <button id="find-params">Get All Params</button> -->
   </div>
+
   <script src="popup.js"></script>
 
 </body>
