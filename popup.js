@@ -17,6 +17,7 @@ document.querySelectorAll('.tab-button').forEach(button => {
   });
 });
 
+// Initiate Endpoint Finder
 document.getElementById('find-endpoints').addEventListener('click', function () {
   document.getElementById('find-endpoints').style.display = "none"
   document.getElementById('loader').style.display = "block"
@@ -38,6 +39,22 @@ document.getElementById('find-endpoints').addEventListener('click', function () 
 
 });
 
+//Initiate Parameter Finder
+document.getElementById('find-params').addEventListener('click', function () {
+  // document.getElementById('find-parameters').style.display = "none"
+  // document.getElementById('loader-params').style.display = "block"
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    const activeTab = tabs[0];
+
+    // First, execute endpoint_finder.js
+    chrome.scripting.executeScript({
+      target: { tabId: activeTab.id },
+      files: ['parameter_finder.js']
+    });
+  });
+
+});
+
 
 document.getElementById('copy-all').addEventListener('click', function () {
   chrome.storage.local.get(['endpoints'], function (result) {
@@ -51,11 +68,67 @@ document.getElementById('copy-all').addEventListener('click', function () {
   });
 });
 
+
+document.getElementById('export-all').addEventListener('click', function () {
+  console.log('exporting');
+  chrome.storage.local.get(['endpoints'], function (result) {
+    // Adding CSV headers for 'endpoint' and 'source'
+    var csvContent = "Endpoint,Source\n"; // CSV headers
+    // Converting each endpoint object to CSV format
+    result.endpoints.forEach(function (e) {
+      var row = `${e.endpoint},${e.source}`; // Create a CSV row
+      csvContent += row + "\n";
+    });
+
+    // Creating a Blob for the CSV content
+    var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+    // Using FileSaver.js's saveAs function to save the CSV file
+    saveAs(blob, "endpoints.csv");
+  });
+});
+
+document.getElementById('export-all-secrets').addEventListener('click', function () {
+  console.log('exporting');
+  chrome.storage.local.get(['secrets'], function (result) {
+    // Adding CSV headers for 'endpoint' and 'source'
+    var csvContent = "Type,Secret\n"; // CSV headers
+    // Converting each endpoint object to CSV format
+    result.secrets.forEach(function (e) {
+      var row = `${e.name},${e.secret}`; // Create a CSV row
+      csvContent += row + "\n";
+    });
+
+    // Creating a Blob for the CSV content
+    var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+    // Using FileSaver.js's saveAs function to save the CSV file
+    saveAs(blob, "secrets.csv");
+  });
+});
+
+
+// Export all endpoints to a txt file
+// document.getElementById('export-all').addEventListener('click', function () {
+//   console.log('exporting');
+//   chrome.storage.local.get(['endpoints'], function (result) {
+//     var text = result.endpoints.map(e => e.endpoint).join('\n');
+//     var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+//     saveAs(blob, "endpoints.txt");
+//   });
+// });
+
+function saveAs(blob, filename) {
+  var link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+}
+
 document.getElementById('clear-results').addEventListener('click', function () {
-  chrome.storage.local.set({ endpoints: [] }, function () {
+  chrome.storage.local.set({ endpoints: [], secrets: [] }, function () {
     document.getElementById('results').textContent = '';
     document.getElementById('results').style.display = 'none';
-
+    document.getElementById('export-all').style.display = 'none';
+    document.getElementById('export-all-secrets').style.display = 'none';
     document.getElementById('copy-all').style.display = 'none';
     document.getElementById('clear-results').style.display = 'none';
   });
@@ -121,26 +194,31 @@ function appendSecretToResultsDiv(secretObj, secretsDiv) {
 // load previous results
 chrome.storage.local.get(['endpoints'], function (result) {
   var resultsDiv = document.getElementById('results');
+  resultsDiv.style.display = 'block';
   if (result.endpoints && result.endpoints.length > 0) {
-    resultsDiv.style.display = 'block';
     document.getElementById('copy-all').style.display = 'block';
+    document.getElementById('export-all').style.display = 'block';
     document.getElementById('clear-results').style.display = 'block';
     result.endpoints.forEach(function (endpointObj) {
       appendEndpointToResultsDiv(endpointObj, resultsDiv);
     });
   } else {
     // If no urls are stored, display the 'No urls found.' message
+    document.getElementById('copy-all').style.display = 'none';
+    document.getElementById('export-all').style.display = 'none';
     resultsDiv.textContent = 'No urls found.';
+
   }
 });
 
 // load previous secrets
 chrome.storage.local.get(['secrets'], function (result) {
-  console.log('result 123', result);
-  var secretsDiv = document.getElementById('secrets-results');
+  console.log('load previous secrets', result);
+  let secretsDiv = document.getElementById('secrets-results');
+  secretsDiv.style.display = 'block';
 
   if (result.secrets && result.secrets.length > 0) {
-    secretsDiv.style.display = 'block';
+    console.log('secrets found', result.secrets);
     // document.getElementById('copy-all-secrets').style.display = 'block';
     // document.getElementById('clear-secrets-results').style.display = 'block';
 
@@ -149,6 +227,8 @@ chrome.storage.local.get(['secrets'], function (result) {
     });
   } else {
     // If no secrets are stored, display the 'No secrets found.' message
+    console.log('No secrets found.');
+    document.getElementById('export-all-secrets').style.display = 'none';
     secretsDiv.textContent = 'No secrets found.';
   }
 });
@@ -165,6 +245,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     document.getElementById('loader').style.display = "none"
     document.getElementById('find-endpoints').style.display = "block"
     document.getElementById('copy-all').style.display = 'block';
+    document.getElementById('export-all').style.display = 'block';
     document.getElementById('clear-results').style.display = 'block';
     let uniqueEndpoints = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
     chrome.storage.local.set({ endpoints: uniqueEndpoints }, function () {
@@ -175,10 +256,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
+function displayBtns() {
+
+}
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('request', request);
   if (request.action === "returnSecrets") {
-    var secretsDiv = document.getElementById('secrets-results');
+    let secretsDiv = document.getElementById('secrets-results');
     secretsDiv.textContent = ''; // Clear the current content
     secretsDiv.style.display = 'block';
 

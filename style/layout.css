@@ -1,0 +1,15 @@
+html {
+    height: 100%;
+    font-family: NotoSansJP-Regular;
+    color: rgb(44, 43, 43);
+}
+
+body {
+    width: 400px;
+    height: 100%;
+    /* padding: 10px; */
+    margin: 0;
+    /* border-radius: 20px !important; */
+
+}
+

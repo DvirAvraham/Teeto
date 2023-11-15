@@ -5,12 +5,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="style/main.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 
 <body>
 
+  <div class="header">
+    <div class="header-start">
+      <div class="logo">
+        <img src="imgs/logo2.png" alt="">
+      </div>
+      <p class="app-title">Teeto</p>
+    </div>
+    <div class="header-end">
+
+    </div>
+  </div>
+
+  <div class="main-container">
+
+    <div class="start-container">
+      <div class="intro">
+        <h1>Welcome</h1>
+        <p>Teeto is a powerful tool designed to enhance your penetration testing efforts.</p>
+        <div class="intro-use">
+          <h3>How to use:</h3>
+          <ul>
+            <li> Navigate to Your Desired Webpage
+            </li>
+            <li> Press the 'Scan Page' button
+            </li>
+            <li> The extension will scan the current webpage, fetching URLs, secrets, and parameters.
+            </li>
+            <li> Analyze the extracted data displayed within the extension or exported to your preferred
+              format.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <button class="start-btn">Scan Page</button>
+    </div>
+
+    <div class="data-container" style="display: none;">
+    </div>
+
+  </div>
+
+  <div class="footer">
+
+  </div>
+
+  <!-- Tab buttons -->
   <div class="tabs">
     <button class="tab-button active" data-tab="endpoints">Endpoints</button>
     <button class="tab-button" data-tab="secrets">Secrets</button>
@@ -19,35 +65,55 @@
 
   <img id="loader" src="imgs/loader.gif" style="display: none; height: 100%; width: 100%;">
 
+  <!-- General btns -->
   <div class="btn-group">
     <button class="btn" id="find-endpoints">
       <i class="ri-search-line"></i>
       <!-- Find Endpoints -->
     </button>
-    <button class="btn" id="copy-all" style="display: none;">
-      <i class="ri-file-copy-line"></i>
-      <!-- Copy All URLs -->
+    <button class="btn" id="find-params">
+      <i class="ri-search-line"></i>
+      params
+      <!-- Find Endpoints -->
     </button>
-
-    <div id="copy-msg" style="display: none; "> Copied</div>
-
     <button class="btn" id="clear-results" style="display: none; ">
       <i class="ri-delete-bin-7-line"></i>
       <!-- Clear Results -->
     </button>
   </div>
 
+  <!-- Tabs: -->
+
+  <!-- URLS Tab -->
   <div class="tab-content" id="endpoints">
+    <!-- URLS Buttons -->
+    <div class="btn-group-tab">
+      <button class="btn" id="copy-all" style="display: none;">
+        <i class="ri-file-copy-line"></i>
+      </button>
+      <button class="btn" id="export-all" style="display: none;">
+        <i class="ri-file-download-line"></i>
+      </button>
+      <div id="copy-msg" style="display: none; "> Copied</div>
+    </div>
+    <!-- URLS Results -->
     <div id="results" style="display: none;"></div>
   </div>
 
+  <!-- Secrets Tab -->
   <div class="tab-content" id="secrets" style="display: none;">
+    <!-- Secrets Buttons -->
+    <div class="btn-group-tab">
+      <button class="btn" id="export-all-secrets" style="display: none;">
+        <i class="ri-file-download-line"></i>
+      </button>
+    </div>
+    <!-- Secrets Results -->
     <div id="secrets-results" style="display: none;"></div>
   </div>
 
+  <!-- Params Tab -->
   <div class="tab-content" id="params" style="display: none;">
-    <!-- Content for params goes here -->
-    <!-- <button id="find-params">Get All Params</button> -->
   </div>
 
   <script src="popup.js"></script>
