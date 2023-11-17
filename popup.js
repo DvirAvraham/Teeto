@@ -115,7 +115,9 @@ function saveAs(blob, filename) {
 document.getElementById('clear-results').addEventListener('click', function () {
   chrome.storage.local.set({ endpoints: [], secrets: [] }, function () {
     document.getElementById('results').textContent = '';
+    document.getElementById('secrets').textContent = '';
     document.getElementById('results').style.display = 'none';
+    document.getElementById('secrets').style.display = 'none';
     document.getElementById('export-all').style.display = 'none';
     document.getElementById('export-all-secrets').style.display = 'none';
     document.getElementById('copy-all').style.display = 'none';
