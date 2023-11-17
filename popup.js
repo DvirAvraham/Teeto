@@ -68,7 +68,6 @@ document.getElementById('copy-all').addEventListener('click', function () {
   });
 });
 
-
 document.getElementById('export-all').addEventListener('click', function () {
   console.log('exporting');
   chrome.storage.local.get(['endpoints'], function (result) {
@@ -105,16 +104,6 @@ document.getElementById('export-all-secrets').addEventListener('click', function
   });
 });
 
-
-// Export all endpoints to a txt file
-// document.getElementById('export-all').addEventListener('click', function () {
-//   console.log('exporting');
-//   chrome.storage.local.get(['endpoints'], function (result) {
-//     var text = result.endpoints.map(e => e.endpoint).join('\n');
-//     var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
-//     saveAs(blob, "endpoints.txt");
-//   });
-// });
 
 function saveAs(blob, filename) {
   var link = document.createElement('a');

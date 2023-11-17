@@ -49,24 +49,26 @@
 
     <div class="data-container">
       <!-- Tab buttons -->
-      <h3>General</h3>
-      <div class="domain-name">
-        <div class="icon">
-          <i class="ri-link"></i>
-        </div>
-        <p>google.com</p>
-      </div>
-
       <div class="tabs">
         <button class="tab-button active" data-tab="endpoints">Endpoints</button>
         <button class="tab-button" data-tab="secrets">Secrets</button>
         <button class="tab-button" data-tab="params">Parameters</button>
       </div>
 
+      <!-- <h3>General</h3> -->
+      <!-- <div class="domain-name">
+        <div class="icon">
+          <i class="ri-link"></i>
+        </div>
+        <p>google.com</p>
+      </div> -->
+
+
+
       <!-- URLS Tab -->
       <div class="tab-content" id="endpoints" >
         <!-- URLS Buttons -->
-        <div class="btn-group-tab" style="display: none;">
+        <div class="btn-group-tab" style="display: block;">
           <button class="btn" id="copy-all" style="display: none;">
             <i class="ri-file-copy-line"></i>
           </button>
@@ -91,7 +93,7 @@
   <img id="loader" src="imgs/loader.gif" style="display: none; height: 100%; width: 100%;">
 
   <!-- General btns -->
-  <div class="btn-group"  style="display: none;">
+  <div class="btn-group"  style="display: block;">
     <button class="btn" id="find-endpoints">
       <i class="ri-search-line"></i>
     </button>
