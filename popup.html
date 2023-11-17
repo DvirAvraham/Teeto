@@ -66,7 +66,7 @@
 
 
       <!-- URLS Tab -->
-      <div class="tab-content" id="endpoints" >
+      <div class="tab-content" id="endpoints">
         <!-- URLS Buttons -->
         <div class="btn-group-tab" style="display: block;">
           <button class="btn" id="copy-all" style="display: none;">
@@ -81,6 +81,18 @@
         <h3>Urls</h3>
         <div id="results" style="display: none;"></div>
       </div>
+      <!-- Secrets Tab -->
+      <div class="tab-content" id="secrets" style="display: none;">
+        <!-- Secrets Buttons -->
+        <div class="btn-group-tab">
+          <button class="btn" id="export-all-secrets" style="display: none;">
+            <i class="ri-file-download-line"></i>
+          </button>
+        </div>
+        <!-- Secrets Results -->
+        <div id="secrets-results" style="display: none;"></div>
+      </div>
+
     </div>
 
   </div>
@@ -93,7 +105,7 @@
   <img id="loader" src="imgs/loader.gif" style="display: none; height: 100%; width: 100%;">
 
   <!-- General btns -->
-  <div class="btn-group"  style="display: block;">
+  <div class="btn-group" style="display: block;">
     <button class="btn" id="find-endpoints">
       <i class="ri-search-line"></i>
     </button>
@@ -110,17 +122,7 @@
 
 
 
-  <!-- Secrets Tab -->
-  <div class="tab-content" id="secrets" style="display: none;">
-    <!-- Secrets Buttons -->
-    <div class="btn-group-tab">
-      <button class="btn" id="export-all-secrets" style="display: none;">
-        <i class="ri-file-download-line"></i>
-      </button>
-    </div>
-    <!-- Secrets Results -->
-    <div id="secrets-results" style="display: none;"></div>
-  </div>
+
 
   <!-- Params Tab -->
   <div class="tab-content" id="params" style="display: none;">

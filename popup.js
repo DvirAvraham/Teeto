@@ -203,6 +203,7 @@ chrome.storage.local.get(['endpoints'], function (result) {
 chrome.storage.local.get(['secrets'], function (result) {
   console.log('load previous secrets', result);
   let secretsDiv = document.getElementById('secrets-results');
+  console.log('secretsDiv in load previous secrets ',secretsDiv);
   secretsDiv.style.display = 'block';
 
   if (result.secrets && result.secrets.length > 0) {
@@ -228,6 +229,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
   if (request.action === "returnResults") {
     var resultsDiv = document.getElementById('results');
+    console.log('resultsDiv', resultsDiv);
     resultsDiv.textContent = '';
     resultsDiv.style.display = 'block';
     document.getElementById('loader').style.display = "none"
@@ -244,16 +246,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
-function displayBtns() {
-
-}
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('request', request);
   if (request.action === "returnSecrets") {
     let secretsDiv = document.getElementById('secrets-results');
-    secretsDiv.textContent = ''; // Clear the current content
+    console.log('secretsDiv', secretsDiv);
     secretsDiv.style.display = 'block';
+    secretsDiv.textContent = ''; // Clear the current content
 
     let uniqueSecrets = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
     console.log('uniqueSecrets', uniqueSecrets);
