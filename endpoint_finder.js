@@ -7,7 +7,6 @@ var regex3 = /^(http|https):\/\/[^\s/$.?#].[^\s]*$/ig;
 
 var regexList = [regex1, regex2, regex3];
 
-
 const pathResults = new Set;
 const baseUrl = window.location.origin;
 const nodeModulesRegex = /node_modules/;
@@ -19,6 +18,7 @@ function addPath(path, source) {
   if (!nodeModulesRegex.test(absoluteUrl) && !exists) {
     pathResults.add({ endpoint: absoluteUrl, source: source });
   }
+  extractParamNamesFromSet(pathResults)
 }
 
 function fetchAndTestRegex(scriptSrc) {
@@ -33,6 +33,7 @@ function fetchAndTestRegex(scriptSrc) {
           const isSlash = isItSlashe(match[0])
           if ( !isSlash && baseUrl !== match[0] ) addPath(match[0], scriptSrc);
         }
+
       }
       // for (const regex of secretsRegex) {
       //   const value = Object.values(regex)[0]; 
@@ -50,6 +51,7 @@ function fetchAndTestRegex(scriptSrc) {
 }
 
 for(var i = 0; i < scripts.length; i++){
+  console.log(1);
   var scriptSrc = scripts[i].src;
   if(scriptSrc != ""){
     fetchAndTestRegex(scriptSrc);
@@ -59,10 +61,12 @@ for(var i = 0; i < scripts.length; i++){
 var pageContent = document.documentElement.outerHTML;
 
 for(let regex of regexList) {
+  console.log(2);
   var matches = pageContent.matchAll(regex);
   for(const match of matches) {
     addPath(match[0], 'HTML');
   }
+  
 }
 
 function writeResults(){
@@ -88,3 +92,22 @@ function isItSlashe(url){
   const regex = /^[\/\\]+$/; 
   return regex.test(url);
 }
+
+function extractParamNamesFromSet(urlSet) {
+  const paramsRegex = /[?&]([^=&]+)(?:=([^&]*))?/g;
+  const paramNameSet = [];
+
+  urlSet.forEach((urlObject) => {
+    const url = urlObject.endpoint;
+
+    let match;
+
+    while ((match = paramsRegex.exec(url)) !== null) {
+      const paramName = decodeURIComponent(match[1]);
+      !paramNameSet.some(param=>param === paramName) && paramNameSet.push(paramName); 
+    }
+  });
+console.log(paramNameSet);
+}
+
+
