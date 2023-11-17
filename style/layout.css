@@ -7,9 +7,9 @@ html {
 body {
     width: 400px;
     height: 100%;
-    /* padding: 10px; */
     margin: 0;
-    /* border-radius: 20px !important; */
-
 }
 
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}

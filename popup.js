@@ -137,33 +137,30 @@ document.getElementById('clear-results').addEventListener('click', function () {
 function appendEndpointToResultsDiv(endpointObj, resultsDiv) {
   var endpointElement = document.createElement('div');
   endpointElement.classList.add('url-box');
-  endpointElement.style.border = "1px solid #ddd";
-  endpointElement.style.padding = "10px";
-  endpointElement.style.marginBottom = "10px";
-  endpointElement.style.borderRadius = "5px";
+  // endpointElement.style.border = "1px solid #ddd";
+  // endpointElement.style.padding = "10px";
+  // endpointElement.style.marginBottom = "10px";
+  // endpointElement.style.borderRadius = "5px";
 
   var a = document.createElement('a');
   a.classList.add('url-link');
   a.textContent = endpointObj.endpoint;
   a.href = "#";
-  a.style.textDecoration = "none";
-  a.style.color = "red";
-  a.style.marginRight = "10px";
   a.addEventListener('click', function (e) {
     e.preventDefault();
     chrome.tabs.create({ url: endpointObj.endpoint });
   });
 
-  var sourceLink = document.createElement('a');
-  sourceLink.classList.add('source-link');
+  // var sourceLink = document.createElement('a');
+  // sourceLink.classList.add('source-link');
 
-  sourceLink.textContent = '(found in ' + endpointObj.source + ')';
-  sourceLink.href = endpointObj.source;
-  sourceLink.target = "_blank";
-  sourceLink.style.color = "gray";
+  // sourceLink.textContent = '(found in ' + endpointObj.source + ')';
+  // sourceLink.href = endpointObj.source;
+  // sourceLink.target = "_blank";
+  // sourceLink.style.color = "gray";
 
   endpointElement.appendChild(a);
-  endpointElement.appendChild(sourceLink);
+  // endpointElement.appendChild(sourceLink);
 
   resultsDiv.appendChild(endpointElement);
 }
