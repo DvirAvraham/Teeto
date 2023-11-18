@@ -264,7 +264,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     });
   }
   else if (request.action === "returnParams") {
-    var paramsDiv = document.getElementById('params');
+    var paramsDiv = document.getElementById('params-results');
     console.log('paramsDiv', paramsDiv);
     paramsDiv.textContent = '';
     paramsDiv.style.display = 'block';
