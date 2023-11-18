@@ -1,3 +1,4 @@
+const paramNameSet = [];
 (function() {
 var scripts = document.getElementsByTagName("script");
 var regex1 = /(?<=(\"|\'|\`))\/[a-zA-Z0-9_?&=\/\-\#\.]*(?=(\"|\'|\`))/g;
@@ -95,8 +96,8 @@ function isItSlashe(url){
   return regex.test(url);
 }
 
-const paramNameSet = [];
 function extractParamNamesFromSet(urlSet) {
+  console.log(paramNameSet);
   const paramsRegex = /[?&]([^=&]+)(?:=([^&]*))?/g;
 
   urlSet.forEach((urlObject) => {
@@ -109,7 +110,6 @@ function extractParamNamesFromSet(urlSet) {
       !paramNameSet.some(param=>param === paramName) && paramNameSet.push(paramName); 
     }
   });
-console.log(paramNameSet);
 }
 
 

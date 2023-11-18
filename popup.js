@@ -184,11 +184,10 @@ function appendEndpointToParamsDiv(paramsObj, paramssDiv) {
   let paramsName = document.createElement('p');
   let paramsText = document.createElement('p');
 
-  paramsName.textContent = paramsObj.name + ': ';
   paramsName.className = 'params-name';
 
 
-  paramsText.textContent = paramsObj.params;
+  paramsText.textContent = paramsObj;
   paramsText.className = 'params-text';
 
   paramsElement.appendChild(paramsName);
@@ -245,10 +244,8 @@ chrome.storage.local.get(['secrets'], function (result) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('request', request);
-
   if (request.action === "returnResults") {
     var resultsDiv = document.getElementById('results');
-    console.log('resultsDiv', resultsDiv);
     resultsDiv.textContent = '';
     resultsDiv.style.display = 'block';
     document.getElementById('loader').style.display = "none"
@@ -265,18 +262,18 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
   else if (request.action === "returnParams") {
     var paramsDiv = document.getElementById('params-results');
-    console.log('paramsDiv', paramsDiv);
+    console.log(paramsDiv);
     paramsDiv.textContent = '';
     paramsDiv.style.display = 'block';
     document.getElementById('loader').style.display = "none"
-    document.getElementById('find-endpoints').style.display = "block"
+    // document.getElementById('find-params').style.display = "block"
     document.getElementById('copy-all').style.display = 'block';
     document.getElementById('export-all').style.display = 'block';
-    document.getElementById('clear-params').style.display = 'block';
-    let uniqueEndpoints = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
-    chrome.storage.local.set({ endpoints: uniqueEndpoints }, function () {
-      uniqueEndpoints.forEach(function (endpointObj) {
-        appendEndpointToParamsDiv(endpointObj, paramsDiv);
+    // document.getElementById('clear-params').style.display = 'block';
+    let uniqueParams = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
+    chrome.storage.local.set({ params: uniqueParams }, function () {
+      uniqueParams.forEach(function (paramObj) {
+        appendEndpointToParamsDiv(paramObj, paramsDiv);
       });
     });
   }
