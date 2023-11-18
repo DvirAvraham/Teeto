@@ -157,7 +157,6 @@ function appendEndpointToResultsDiv(endpointObj, resultsDiv) {
 }
 
 function appendSecretToResultsDiv(secretObj, secretsDiv) {
-  console.log('secretObj', secretObj);
   let secretElement = document.createElement('div');
   secretElement.className = 'secret';
 

@@ -7,6 +7,8 @@
   <title>Document</title>
   <link rel="stylesheet" href="style/main.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="loaders/dist/loading-bar.css" />
+  <script type="text/javascript" src="loaders/dist/loading-bar.js"></script>
 </head>
 
 <body>
@@ -19,7 +21,10 @@
       <p class="app-title">Teeto</p>
     </div>
     <div class="header-end">
-
+      <button class="btn" id="clear-results" style="display: block; ">
+        <i class="ri-refresh-line"></i>
+        Refresh
+      </button>
     </div>
   </div>
 
@@ -81,6 +86,7 @@
         <h3>Urls</h3>
         <div id="results" style="display: none;"></div>
       </div>
+
       <!-- Secrets Tab -->
       <div class="tab-content" id="secrets" style="display: none;">
         <!-- Secrets Buttons -->
@@ -90,7 +96,14 @@
           </button>
         </div>
         <!-- Secrets Results -->
+        <h3>Secrets</h3>
         <div id="secrets-results" style="display: none;"></div>
+      </div>
+
+      <!-- Params Tab -->
+      <div class="tab-content" id="params" style="display: none;">
+        <h3>Parameters</h3>
+        <div id="params-results" style="display: none;"></div>
       </div>
 
     </div>
@@ -101,7 +114,8 @@
 
   </div>
 
-
+  <!-- <div class="ldBar" data-value="50">
+  </div> -->
   <img id="loader" src="imgs/loader.gif" style="display: none; height: 100%; width: 100%;">
 
   <!-- General btns -->
@@ -109,13 +123,11 @@
     <button class="btn" id="find-endpoints">
       <i class="ri-search-line"></i>
     </button>
-    <button class="btn" id="find-params">
+    <button class="btn" id="find-params" style="display: none;">
       <i class="ri-search-line"></i>
       params
     </button>
-    <button class="btn" id="clear-results" style="display: block; ">
-      <i class="ri-delete-bin-7-line"></i>
-    </button>
+
   </div>
 
   <!-- Tabs: -->
@@ -124,9 +136,7 @@
 
 
 
-  <!-- Params Tab -->
-  <div class="tab-content" id="params" style="display: none;">
-  </div>
+
 
   <script src="popup.js"></script>
 
