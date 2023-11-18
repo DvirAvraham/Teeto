@@ -12,23 +12,24 @@ const baseUrl = window.location.origin;
 const nodeModulesRegex = /node_modules/;
 
 function addPath(path, source) {
+  extractParamNamesFromSet(pathResults)
   var absoluteUrl = path.startsWith('/') ? baseUrl + path : path;
   absoluteUrl = deleteTrailingSlashes(absoluteUrl)
   const exists = Array.from(pathResults).some(result => result.endpoint === absoluteUrl);
   if (!nodeModulesRegex.test(absoluteUrl) && !exists) {
     pathResults.add({ endpoint: absoluteUrl, source: source });
   }
-  extractParamNamesFromSet(pathResults)
 }
 
 function fetchAndTestRegex(scriptSrc) {
   fetch(scriptSrc)
-    .then(function(response){
-      return response.text()
-    })
-    .then(function(scriptContent){
-      for(let regex of regexList) {
-        var matches = scriptContent.matchAll(regex);
+  .then(function(response){
+    return response.text()
+  })
+  .then(function(scriptContent){
+    for(let regex of regexList) {
+      var matches = scriptContent.matchAll(regex);
+
         for(const match of matches) {
           const isSlash = isItSlashe(match[0])
           if ( !isSlash && baseUrl !== match[0] ) addPath(match[0], scriptSrc);
@@ -39,19 +40,18 @@ function fetchAndTestRegex(scriptSrc) {
       //   const value = Object.values(regex)[0]; 
       //   const key = Object.keys(regex)[0]; 
       //   var matches = scriptContent.matchAll(value);
-
+      
       //   for(const match of matches) {
-      //      console.log(key+' ---> '+match[0]);
-      //   }
-      // }
-    })
-    .catch(function(error){
-      console.log("An error occurred: ",error)
-    });
+        //      console.log(key+' ---> '+match[0]);
+        //   }
+        // }
+      })
+      .catch(function(error){
+        console.log("An error occurred: ",error)
+      });
 }
 
 for(var i = 0; i < scripts.length; i++){
-  console.log(1);
   var scriptSrc = scripts[i].src;
   if(scriptSrc != ""){
     fetchAndTestRegex(scriptSrc);
@@ -61,7 +61,6 @@ for(var i = 0; i < scripts.length; i++){
 var pageContent = document.documentElement.outerHTML;
 
 for(let regex of regexList) {
-  console.log(2);
   var matches = pageContent.matchAll(regex);
   for(const match of matches) {
     addPath(match[0], 'HTML');
@@ -78,6 +77,9 @@ function writeResults(){
 
 new Promise(resolve => setTimeout(resolve, 3e3)).then(() => 
 chrome.runtime.sendMessage({action: "returnResults", data: writeResults()}))
+
+new Promise(resolve => setTimeout(resolve, 3e3)).then(() => 
+chrome.runtime.sendMessage({action: "returnParams", data: paramNameSet}))
 })();
 
 function deleteTrailingSlashes(url) {
@@ -93,9 +95,9 @@ function isItSlashe(url){
   return regex.test(url);
 }
 
+const paramNameSet = [];
 function extractParamNamesFromSet(urlSet) {
   const paramsRegex = /[?&]([^=&]+)(?:=([^&]*))?/g;
-  const paramNameSet = [];
 
   urlSet.forEach((urlObject) => {
     const url = urlObject.endpoint;

@@ -175,7 +175,27 @@ function appendSecretToResultsDiv(secretObj, secretsDiv) {
   secretElement.appendChild(secretText);
 
   secretsDiv.appendChild(secretElement);
+}
 
+function appendEndpointToParamsDiv(paramsObj, paramssDiv) {
+  console.log('paramsObj', paramsObj);
+  let paramsElement = document.createElement('div');
+  paramsElement.className = 'params';
+
+  let paramsName = document.createElement('p');
+  let paramsText = document.createElement('p');
+
+  paramsName.textContent = paramsObj.name + ': ';
+  paramsName.className = 'params-name';
+
+
+  paramsText.textContent = paramsObj.params;
+  paramsText.className = 'params-text';
+
+  paramsElement.appendChild(paramsName);
+  paramsElement.appendChild(paramsText);
+
+  paramssDiv.appendChild(paramsElement);
 }
 
 
@@ -241,6 +261,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     chrome.storage.local.set({ endpoints: uniqueEndpoints }, function () {
       uniqueEndpoints.forEach(function (endpointObj) {
         appendEndpointToResultsDiv(endpointObj, resultsDiv);
+      });
+    });
+  }
+  else if (request.action === "returnParams") {
+    var paramsDiv = document.getElementById('params');
+    console.log('paramsDiv', paramsDiv);
+    paramsDiv.textContent = '';
+    paramsDiv.style.display = 'block';
+    document.getElementById('loader').style.display = "none"
+    document.getElementById('find-endpoints').style.display = "block"
+    document.getElementById('copy-all').style.display = 'block';
+    document.getElementById('export-all').style.display = 'block';
+    document.getElementById('clear-params').style.display = 'block';
+    let uniqueEndpoints = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
+    chrome.storage.local.set({ endpoints: uniqueEndpoints }, function () {
+      uniqueEndpoints.forEach(function (endpointObj) {
+        appendEndpointToParamsDiv(endpointObj, paramsDiv);
       });
     });
   }
