@@ -21,9 +21,9 @@
       <p class="app-title">Teeto</p>
     </div>
     <div class="header-end">
-      <button class="btn" id="clear-results" style="display: block; ">
+      <button class="btn" id="clear-results" style="display: block; " title="Refresh">
         <i class="ri-refresh-line"></i>
-        Refresh
+        <!-- Refresh -->
       </button>
     </div>
   </div>
@@ -72,37 +72,59 @@
 
       <!-- URLS Tab -->
       <div class="tab-content" id="endpoints">
-        <!-- URLS Buttons -->
-        <div class="btn-group-tab" style="display: block;">
-          <button class="btn" id="copy-all" style="display: none;">
-            <i class="ri-file-copy-line"></i>
-          </button>
-          <button class="btn" id="export-all" style="display: none;">
-            <i class="ri-file-download-line"></i>
-          </button>
-          <div id="copy-msg" style="display: none; "> Copied</div>
-        </div>
+
         <!-- URLS Results -->
-        <h3>Urls</h3>
+        <div class="tab-header">
+          <h3>URLS</h3>
+          <div id="dropdown" class="dropdown">
+            <div class="selected-option"><i class="ri-more-line"></i></div>
+            <div class="options-container">
+
+              <div id="copy-all" style="display: none;">
+                <i class="ri-file-copy-line"></i>
+                Copy All
+              </div>
+
+              <div id="export-all" style="display: none;">
+                <i class="ri-file-download-line"></i>
+                Download CSV
+              </div>
+            </div>
+          </div>
+        </div>
         <div id="results" style="display: none;"></div>
       </div>
 
       <!-- Secrets Tab -->
       <div class="tab-content" id="secrets" style="display: none;">
         <!-- Secrets Buttons -->
-        <div class="btn-group-tab">
-          <button class="btn" id="export-all-secrets" style="display: none;">
-            <i class="ri-file-download-line"></i>
-          </button>
-        </div>
+
         <!-- Secrets Results -->
-        <h3>Secrets</h3>
+        <div class="tab-header">
+          <h3>Secrets</h3>
+          <div id="dropdown" class="dropdown">
+            <div class="selected-option"><i class="ri-more-line"></i></div>
+            <div class="options-container">
+              <div id="export-all-secrets" >
+                <i class="ri-file-download-line"></i>
+              </div>
+            </div>
+          </div>
+        </div>
         <div id="secrets-results" style="display: none;"></div>
       </div>
 
       <!-- Params Tab -->
       <div class="tab-content" id="params" style="display: none;">
-        <h3>Parameters</h3>
+        <div class="tab-header">
+          <h3>Parameters</h3>
+          <div id="dropdown" class="dropdown">
+            <div class="selected-option"><i class="ri-more-line"></i></div>
+            <div class="options-container">
+              <!-- Options will be populated here -->
+            </div>
+          </div>
+        </div>
         <div id="params-results" style="display: none;"></div>
       </div>
 
@@ -111,7 +133,7 @@
   </div>
 
   <div class="footer">
-
+    <div id="copy-msg" style="display: none; "> Copied</div>
   </div>
 
   <!-- <div class="ldBar" data-value="50">
@@ -123,6 +145,7 @@
     <button class="btn" id="find-endpoints">
       <i class="ri-search-line"></i>
     </button>
+
     <button class="btn" id="find-params" style="display: none;">
       <i class="ri-search-line"></i>
       params
@@ -130,15 +153,9 @@
 
   </div>
 
-  <!-- Tabs: -->
-
-
-
-
-
-
-
   <script src="popup.js"></script>
+  <script src="dropdown.js"></script>
+
 
 </body>
 

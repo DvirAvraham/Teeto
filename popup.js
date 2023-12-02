@@ -183,8 +183,8 @@ chrome.storage.local.get(['endpoints'], function (result) {
   var resultsDiv = document.getElementById('results');
   resultsDiv.style.display = 'block';
   if (result.endpoints && result.endpoints.length > 0) {
-    document.getElementById('copy-all').style.display = 'block';
-    document.getElementById('export-all').style.display = 'block';
+    document.getElementById('copy-all').style.display = 'flex';
+    document.getElementById('export-all').style.display = 'flex';
     document.getElementById('clear-results').style.display = 'block';
     result.endpoints.forEach(function (endpointObj) {
       appendEndpointToResultsDiv(endpointObj, resultsDiv);
@@ -202,13 +202,13 @@ chrome.storage.local.get(['endpoints'], function (result) {
 chrome.storage.local.get(['secrets'], function (result) {
   console.log('load previous secrets', result);
   let secretsDiv = document.getElementById('secrets-results');
-  console.log('secretsDiv in load previous secrets ',secretsDiv);
+  console.log('secretsDiv in load previous secrets ', secretsDiv);
   secretsDiv.style.display = 'block';
 
   if (result.secrets && result.secrets.length > 0) {
     console.log('secrets found', result.secrets);
     // document.getElementById('copy-all-secrets').style.display = 'block';
-    // document.getElementById('clear-secrets-results').style.display = 'block';
+    document.getElementById('export-all-secrets').style.display = 'flex';
 
     result.secrets.forEach(function (secretObj) {
       appendSecretToResultsDiv(secretObj, secretsDiv);
@@ -233,8 +233,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     resultsDiv.style.display = 'block';
     document.getElementById('loader').style.display = "none"
     document.getElementById('find-endpoints').style.display = "block"
-    document.getElementById('copy-all').style.display = 'block';
-    document.getElementById('export-all').style.display = 'block';
+    document.getElementById('copy-all').style.display = 'flex';
+    document.getElementById('export-all').style.display = 'flex';
     document.getElementById('clear-results').style.display = 'block';
     let uniqueEndpoints = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
     chrome.storage.local.set({ endpoints: uniqueEndpoints }, function () {
@@ -263,6 +263,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       return; // Exit the function early
     }
     // Hide loaders and show relevant buttons if secrets are found
+    document.getElementById('export-all-secrets').style.display = 'flex';
     // document.getElementById('secrets-loader').style.display = "none"
     // document.getElementById('find-secrets').style.display = "block"
     // document.getElementById('copy-all-secrets').style.display = 'block';
@@ -290,3 +291,5 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 // // Call this function after any operation that might modify the results
 // updateButtonVisibility();
+
+

@@ -55,3 +55,51 @@
 
     /* Content appears attached to the tabs above */
 }
+
+.tab-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dropdown {
+    position: relative;
+    /* width: 200px; */
+    /* width: 100%; */
+    width: fit-content;
+
+}
+
+.selected-option {
+    padding: 2px 5px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    border-radius: 5px;
+    /* width: 100%; */
+
+}
+
+.options-container {
+    position: absolute;
+    top: 100%;
+    left: -85px;
+    right: 0;
+    border: 1px solid #ddd;
+    display: none;
+    z-index: 1;
+    width: fit-content;
+    background-color: white;
+}
+
+.options-container div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.options-container div:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
