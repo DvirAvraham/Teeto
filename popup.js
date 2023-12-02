@@ -21,6 +21,9 @@ document.querySelectorAll('.tab-button').forEach(button => {
 document.getElementById('find-endpoints').addEventListener('click', function () {
   document.getElementById('find-endpoints').style.display = "none"
   document.getElementById('loader').style.display = "block"
+  document.getElementById('data-container').style.display = "block"
+  document.getElementById('start-container').style.display = "none"
+
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const activeTab = tabs[0];
 
@@ -122,6 +125,8 @@ document.getElementById('clear-results').addEventListener('click', function () {
     document.getElementById('export-all-secrets').style.display = 'none';
     document.getElementById('copy-all').style.display = 'none';
     document.getElementById('clear-results').style.display = 'none';
+    document.getElementById('data-container').style.display = "none"
+    document.getElementById('start-container').style.display = "block"
   });
 });
 
@@ -205,6 +210,8 @@ chrome.storage.local.get(['endpoints'], function (result) {
     document.getElementById('copy-all').style.display = 'flex';
     document.getElementById('export-all').style.display = 'flex';
     document.getElementById('clear-results').style.display = 'block';
+    document.getElementById('data-container').style.display = "block"
+    document.getElementById('start-container').style.display = "none"
     result.endpoints.forEach(function (endpointObj) {
       appendEndpointToResultsDiv(endpointObj, resultsDiv);
     });
@@ -228,7 +235,8 @@ chrome.storage.local.get(['secrets'], function (result) {
     console.log('secrets found', result.secrets);
     // document.getElementById('copy-all-secrets').style.display = 'block';
     document.getElementById('export-all-secrets').style.display = 'flex';
-
+    document.getElementById('data-container').style.display = "block"
+    document.getElementById('start-container').style.display = "none"
     result.secrets.forEach(function (secretObj) {
       appendSecretToResultsDiv(secretObj, secretsDiv);
     });

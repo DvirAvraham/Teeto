@@ -30,7 +30,7 @@
 
   <div class="main-container">
 
-    <!-- <div class="start-container">
+    <div class="start-container" id="start-container">
       <div class="intro">
         <h1>Welcome</h1>
         <p>Teeto is a powerful tool designed to enhance your penetration testing efforts.</p>
@@ -49,10 +49,10 @@
           </ul>
         </div>
       </div>
-      <button class="start-btn">Scan Page</button>
-    </div> -->
+      <button class="start-btn" id="find-endpoints">Scan Page</button>
+    </div>
 
-    <div class="data-container">
+    <div class="data-container" id="data-container" style="display: none; ">
       <!-- Tab buttons -->
       <div class="tabs">
         <button class="tab-button active" data-tab="endpoints">Endpoints</button>
@@ -60,23 +60,13 @@
         <button class="tab-button" data-tab="params">Parameters</button>
       </div>
 
-      <!-- <h3>General</h3> -->
-      <!-- <div class="domain-name">
-        <div class="icon">
-          <i class="ri-link"></i>
-        </div>
-        <p>google.com</p>
-      </div> -->
-
-
-
       <!-- URLS Tab -->
       <div class="tab-content" id="endpoints">
 
         <!-- URLS Results -->
         <div class="tab-header">
           <h3>URLS</h3>
-          <div id="dropdown" class="dropdown">
+          <div id="dropdown-1" class="dropdown">
             <div class="selected-option"><i class="ri-more-line"></i></div>
             <div class="options-container">
 
@@ -102,11 +92,12 @@
         <!-- Secrets Results -->
         <div class="tab-header">
           <h3>Secrets</h3>
-          <div id="dropdown" class="dropdown">
+          <div id="dropdown-2" class="dropdown">
             <div class="selected-option"><i class="ri-more-line"></i></div>
             <div class="options-container">
-              <div id="export-all-secrets" >
+              <div id="export-all-secrets">
                 <i class="ri-file-download-line"></i>
+                Download CSV
               </div>
             </div>
           </div>
@@ -118,7 +109,7 @@
       <div class="tab-content" id="params" style="display: none;">
         <div class="tab-header">
           <h3>Parameters</h3>
-          <div id="dropdown" class="dropdown">
+          <div id="dropdown-3" class="dropdown">
             <div class="selected-option"><i class="ri-more-line"></i></div>
             <div class="options-container">
               <!-- Options will be populated here -->
@@ -136,16 +127,10 @@
     <div id="copy-msg" style="display: none; "> Copied</div>
   </div>
 
-  <!-- <div class="ldBar" data-value="50">
-  </div> -->
   <img id="loader" src="imgs/loader.gif" style="display: none; height: 100%; width: 100%;">
 
   <!-- General btns -->
   <div class="btn-group" style="display: block;">
-    <button class="btn" id="find-endpoints">
-      <i class="ri-search-line"></i>
-    </button>
-
     <button class="btn" id="find-params" style="display: none;">
       <i class="ri-search-line"></i>
       params
