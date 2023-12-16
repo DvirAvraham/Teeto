@@ -119,14 +119,14 @@ document.getElementById('clear-results').addEventListener('click', function () {
   chrome.storage.local.set({ endpoints: [], secrets: [] }, function () {
     document.getElementById('results').textContent = '';
     document.getElementById('secrets').textContent = '';
-    document.getElementById('results').style.display = 'none';
-    document.getElementById('secrets').style.display = 'none';
-    document.getElementById('export-all').style.display = 'none';
-    document.getElementById('export-all-secrets').style.display = 'none';
-    document.getElementById('copy-all').style.display = 'none';
-    document.getElementById('clear-results').style.display = 'none';
-    document.getElementById('data-container').style.display = "none"
-    document.getElementById('start-container').style.display = "block"
+    // document.getElementById('results').style.display = 'none';
+    // document.getElementById('secrets').style.display = 'none';
+    // document.getElementById('export-all').style.display = 'none';
+    // document.getElementById('export-all-secrets').style.display = 'none';
+    // document.getElementById('copy-all').style.display = 'none';
+    // document.getElementById('clear-results').style.display = 'none';
+    document.getElementById('data-container').style.display = 'none';
+    document.getElementById('start-container').style.display = 'block';
   });
 });
 
@@ -248,6 +248,31 @@ chrome.storage.local.get(['secrets'], function (result) {
   }
 });
 
+//load previous params
+chrome.storage.local.get(['params'], function (result) {
+  console.log('load previous params', result);
+  let paramsDiv = document.getElementById('params-results');
+  console.log('paramsDiv in load previous params ', paramsDiv);
+  paramsDiv.style.display = 'block';
+
+  if (result.params && result.params.length > 0) {
+    console.log('params found', result.params);
+    // document.getElementById('copy-all-secrets').style.display = 'block';
+    // document.getElementById('export-all-params').style.display = 'flex';
+    document.getElementById('data-container').style.display = "block"
+    document.getElementById('start-container').style.display = "none"
+    result.params.forEach(function (paramsObj) {
+      appendEndpointToParamsDiv(paramsObj, paramsDiv);
+    });
+  } else {
+    // If no params are stored, display the 'No params found.' message
+    console.log('No params found.');
+    document.getElementById('export-all-params').style.display = 'none';
+    paramsDiv.textContent = 'No params found.';
+  }
+}
+);
+
 
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -269,8 +294,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     });
   }
   else if (request.action === "returnParams") {
-    var paramsDiv = document.getElementById('params-results');
-    console.log(paramsDiv);
+    var paramsDiv = document.getElementById('params');
     paramsDiv.textContent = '';
     paramsDiv.style.display = 'block';
     document.getElementById('loader').style.display = "none"
@@ -291,10 +315,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('request', request);
   if (request.action === "returnSecrets") {
-    let secretsDiv = document.getElementById('secrets-results');
-    console.log('secretsDiv', secretsDiv);
-    secretsDiv.style.display = 'block';
+    let secretsDiv = document.getElementById('secrets');
     secretsDiv.textContent = ''; // Clear the current content
+    secretsDiv.style.display = 'block';
 
     let uniqueSecrets = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
     console.log('uniqueSecrets', uniqueSecrets);
@@ -305,7 +328,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       return; // Exit the function early
     }
     // Hide loaders and show relevant buttons if secrets are found
-    document.getElementById('export-all-secrets').style.display = 'flex';
+    // document.getElementById('export-all-secrets').style.display = 'flex';
     // document.getElementById('secrets-loader').style.display = "none"
     // document.getElementById('find-secrets').style.display = "block"
     // document.getElementById('copy-all-secrets').style.display = 'block';
