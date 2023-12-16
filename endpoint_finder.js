@@ -1,10 +1,10 @@
 const paramNameSet = [];
 (function() {
 var scripts = document.getElementsByTagName("script");
+var pageContent = document.documentElement.outerHTML;
 var regex1 = /(?<=(\"|\'|\`))\/[a-zA-Z0-9_?&=\/\-\#\.]*(?=(\"|\'|\`))/g;
 var regex2 = /^(http|https):\/\/[^ "]+$/g;
 var regex3 = /^(http|https):\/\/[^\s/$.?#].[^\s]*$/ig;
-
 
 var regexList = [regex1, regex2, regex3];
 
@@ -14,14 +14,13 @@ const nodeModulesRegex = /node_modules/;
 
 function addPath(path, source) {
   var absoluteUrl = path.startsWith('/') ? baseUrl + path : path;
-  extractParamNamesFromSet(absoluteUrl)
+  getUrlParams(absoluteUrl)
   absoluteUrl = deleteTrailingSlashes(absoluteUrl)
   const exists = Array.from(pathResults).some(result => result.endpoint === absoluteUrl);
   if (!nodeModulesRegex.test(absoluteUrl) && !exists) {
     pathResults.add({ endpoint: absoluteUrl, source: source });
   }
 }
-
 
 function fetchAndTestRegex(scriptSrc) {
   fetch(scriptSrc)
@@ -60,34 +59,43 @@ for(var i = 0; i < scripts.length; i++){
   }
 }
 
-var pageContent = document.documentElement.outerHTML;
-
-
 // Get params from HTML forms & inputs
-let parser=new DOMParser().parseFromString(pageContent,"text/html");
-let forms = parser.getElementsByTagName('form');
-
-for (let i = 0; i < forms.length; i++) {
-  const form = forms[i];
-  const formElements = form.elements;
+getFormsParams()
+function getFormsParams(){
+  let parser=new DOMParser().parseFromString(pageContent,"text/html");
+  let forms = parser.getElementsByTagName('form');
   
-  for (let j = 0; j < formElements.length; j++) {
-    const element = formElements[j];
+  for (let i = 0; i < forms.length; i++) {
+    const form = forms[i];
+    const formElements = form.elements;
     
-            if (element.type !== 'submit') {
-              let paramName = element.name
-                !paramNameSet.some(param=>param === paramName) && paramNameSet.push(paramName); 
-              }
-            }
-          }
-          
-          
-          for(let regex of regexList) {
+    for (let j = 0; j < formElements.length; j++) {
+      const element = formElements[j];
+      
+      if (element.type !== 'submit') {
+        let paramName = element.name
+        !paramNameSet.some(param=>param === paramName) && paramNameSet.push(paramName); 
+      }
+    }
+  }
+  
+  for(let regex of regexList) {
             var matches = pageContent.matchAll(regex);
             for(const match of matches) {
               addPath(match[0], 'HTML');
-  }
-  
+            }
+          }
+}
+
+// Get params from urls
+function getUrlParams(url) {
+  const paramsRegex = /[?&]([^=&]+)(?:=([^&]*))?/g;
+    let match;
+
+    while ((match = paramsRegex.exec(url)) !== null) {
+      const paramName = decodeURIComponent(match[1]);
+      !paramNameSet.some(param=>param === paramName) && paramNameSet.push(paramName); 
+    }
 }
 
 function writeResults(){
@@ -112,21 +120,11 @@ function deleteTrailingSlashes(url) {
   return url;
 }
 
-
 function isItSlashe(url){
   const regex = /^[\/\\]+$/; 
   return regex.test(url);
 }
 
-function extractParamNamesFromSet(url) {
-  const paramsRegex = /[?&]([^=&]+)(?:=([^&]*))?/g;
-    let match;
 
-    while ((match = paramsRegex.exec(url)) !== null) {
-      const paramName = decodeURIComponent(match[1]);
-      !paramNameSet.some(param=>param === paramName) && paramNameSet.push(paramName); 
-    }
-  // });
-}
 
 
