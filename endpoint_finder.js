@@ -86,7 +86,7 @@
 
     while ((match = paramsRegex.exec(url)) !== null) {
       const paramName = decodeURIComponent(match[1]);
-      !paramNameSet.some(param => param === paramName) && paramNameSet.push(paramName);
+      if(!!paramName && !paramNameSet.some(param=>param === paramName)) paramNameSet.push(paramName); 
     }
   }
 
