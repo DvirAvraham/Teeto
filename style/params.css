@@ -1,7 +1,7 @@
 #params-results {
     margin: 20px 0;
     height: 200px;
-    /* overflow-y: scroll; */
+    overflow-y: scroll;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 20px;
@@ -14,6 +14,6 @@
 .params{
     display: flex;
     flex-direction: column;
-    /* gap: 10px; */
-    padding: 10px;
+    gap: 10px;
+    padding: 0 10px ;
 }

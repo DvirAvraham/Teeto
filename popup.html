@@ -62,6 +62,7 @@
 
       <!-- URLS Tab -->
       <div class="tab-content" id="endpoints">
+        <img id="loader" src="imgs/Search.gif" style="display: none; height: 100%; width: 100%;">
 
         <!-- URLS Results -->
         <div class="tab-header">
@@ -70,19 +71,20 @@
             <div class="selected-option"><i class="ri-more-line"></i></div>
             <div class="options-container">
 
-              <div id="copy-all" style="display: none;">
+              <div id="copy-all" >
                 <i class="ri-file-copy-line"></i>
                 Copy All
               </div>
 
-              <div id="export-all" style="display: none;">
+              <div id="export-all" >
                 <i class="ri-file-download-line"></i>
                 Download CSV
               </div>
             </div>
           </div>
         </div>
-        <div id="results" style="display: none;"></div>
+        <div id="endpoints-results" style="display: none;">
+        </div>
       </div>
 
       <!-- Secrets Tab -->
@@ -102,7 +104,8 @@
             </div>
           </div>
         </div>
-        <div id="secrets-results" style="display: none;"></div>
+        <div id="secrets-results" style="display: none;">
+        </div>
       </div>
 
       <!-- Params Tab -->
@@ -117,7 +120,7 @@
                 <i class="ri-file-copy-line"></i>
                 Copy as query
               </div>
-              <div id="copy-params-all">
+              <div id="copy-all-params">
                 <!-- Options will be populated here -->
                 <i class="ri-file-copy-line"></i>
                 Copy All
@@ -136,7 +139,6 @@
     <div id="copy-msg" style="display: none; "> Copied</div>
   </div>
 
-  <img id="loader" src="imgs/loader.gif" style="display: none; height: 100%; width: 100%;">
 
   <!-- General btns -->
   <div class="btn-group" style="display: block;">
@@ -149,6 +151,7 @@
 
   <script src="popup.js"></script>
   <script src="dropdown.js"></script>
+  <script src="tabs.js"></script>
 
 
 </body>
