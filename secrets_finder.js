@@ -95,10 +95,9 @@
     return output;
   }
 
-  console.log('got here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! secrets');
-
   new Promise(resolve => setTimeout(resolve, 3e3)).then(() =>
     chrome.runtime.sendMessage({ action: "returnSecrets", data: writeResults() }))
+
 })();
 
 

@@ -71,18 +71,24 @@
             <div class="selected-option"><i class="ri-more-line"></i></div>
             <div class="options-container">
 
-              <div id="copy-all" >
+              <div id="copy-all">
                 <i class="ri-file-copy-line"></i>
                 Copy All
               </div>
 
-              <div id="export-all" >
+              <div id="export-all">
                 <i class="ri-file-download-line"></i>
                 Download CSV
               </div>
             </div>
           </div>
         </div>
+
+        <div id="endpoints-loader" class="loader" style="display: none;">
+          <img id="loader" src="imgs/Search.gif">
+          <p>Searching For Endpoints...</p>
+        </div>
+
         <div id="endpoints-results" style="display: none;">
         </div>
       </div>
@@ -104,6 +110,12 @@
             </div>
           </div>
         </div>
+
+        <div id="secrets-loader" class="loader" style="display: none;">
+          <img id="loader" src="imgs/Search.gif">
+          <p>Searching For Secrets...</p>
+        </div>
+
         <div id="secrets-results" style="display: none;">
         </div>
       </div>
@@ -128,7 +140,15 @@
             </div>
           </div>
         </div>
-        <div id="params-results" style="display: none;"></div>
+
+        <div id="params-loader" class="loader" style="display: none;">
+          <img id="loader" src="imgs/Search.gif">
+          <p>Searching For Parameters...</p>
+        </div>
+
+        <div id="params-results" style="display: none;">
+
+        </div>
       </div>
 
     </div>

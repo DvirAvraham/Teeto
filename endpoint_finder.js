@@ -86,7 +86,7 @@
 
     while ((match = paramsRegex.exec(url)) !== null) {
       const paramName = decodeURIComponent(match[1]);
-      if(!!paramName && !paramNameSet.some(param=>param === paramName)) paramNameSet.push(paramName); 
+      if (!!paramName && !paramNameSet.some(param => param === paramName)) paramNameSet.push(paramName);
     }
   }
 
@@ -102,6 +102,7 @@
 
   new Promise(resolve => setTimeout(resolve, 6e3)).then(() =>
     chrome.runtime.sendMessage({ action: "returnParams", data: paramNameSet }))
+
 })();
 
 function deleteTrailingSlashes(url) {

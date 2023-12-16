@@ -35,11 +35,12 @@ function loadDomainDataToUI(dataArray, dataType) {
       appendDataToDiv(dataObj, dataType);
     });
   } else {
-    resultsDiv.style.display = 'block';
+    resultsDiv.style.display = 'flex';
     resultsDiv.textContent = 'No ' + dataType + ' found.';
+    resultsDiv.style.alignItems = 'center';
+    resultsDiv.style.justifyContent = 'center';
   }
 }
-
 
 function appendDataToDiv(dataObj, dataType) {
   switch (dataType) {
@@ -57,12 +58,13 @@ function appendDataToDiv(dataObj, dataType) {
   }
 }
 
-
 // Initiate Finder With Setting Domain
 document.getElementById('find-endpoints').addEventListener('click', function () {
   document.getElementById('data-container').style.display = "block";
   document.getElementById('start-container').style.display = "none";
-  document.getElementById('loader').style.display = "block";
+  document.getElementById('endpoints-loader').style.display = "flex";
+  document.getElementById('params-loader').style.display = "flex";
+  document.getElementById('secrets-loader').style.display = "flex";
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const activeTab = tabs[0];
@@ -100,16 +102,15 @@ document.getElementById('clear-results').addEventListener('click', function () {
 
       // Delete the domain data completely
       chrome.storage.local.remove(domain, function () {
-        document.getElementById('endpoints-results').textContent = '';
-        document.getElementById('secrets-results').textContent = '';
-        document.getElementById('params-results').textContent = '';
+        document.getElementById('endpoints-results').style.display = 'none';
+        document.getElementById('secrets-results').style.display = 'none';
+        document.getElementById('params-results').style.display = 'none';
         document.getElementById('data-container').style.display = 'none';
         document.getElementById('start-container').style.display = 'block';
       });
     }
   });
 });
-
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log("Received data for", request.action, request.data);
@@ -129,14 +130,23 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
 });
 
-
 function handleReturnResults(request) {
-  document.getElementById('loader').style.display = "none";
+  // document.getElementById('loader').style.display = "none";
   let resultsDiv = document.getElementById('endpoints-results');
-  resultsDiv.style.display = 'block';
-  resultsDiv.textContent = '';
+  document.getElementById('endpoints-loader').style.display = "none";
+
 
   let uniqueEndpoints = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
+  if (uniqueEndpoints.length === 0) {
+    resultsDiv.textContent = 'No endpoints found.';
+    resultsDiv.style.display = 'flex';
+    resultsDiv.style.alignItems = 'center';
+    resultsDiv.style.justifyContent = 'center';
+    return;
+  } else {
+    resultsDiv.style.display = 'block';
+    resultsDiv.textContent = '';
+  }
   // storeDataUnderDomain('endpoints', uniqueEndpoints);
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (tabs.length > 0) {
@@ -159,15 +169,23 @@ function handleReturnResults(request) {
 }
 
 function handleReturnParams(request) {
-  document.getElementById('loader').style.display = "none";
+  // document.getElementById('loader').style.display = "none";
   let paramsDiv = document.getElementById('params-results');
-  paramsDiv.textContent = '';
-  paramsDiv.style.display = 'block';
+  document.getElementById('params-loader').style.display = "none";
+  // paramsDiv.textContent = '';
+  // paramsDiv.style.display = 'block';
 
   let uniqueParams = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
   if (uniqueParams.length === 0) {
-    secretsDiv.textContent = 'No secrets found.';
+    paramsDiv.textContent = 'No params found.';
+    paramsDiv.style.display = 'flex';
+    paramsDiv.style.alignItems = 'center';
+    paramsDiv.style.justifyContent = 'center';
     return;
+  } else {
+    paramsDiv.style.display = 'block';
+    paramsDiv.textContent = '';
+    // document.getElementById('secrets-loader').style.display = "flex";
   }
   // storeDataUnderDomain('params', uniqueParams);
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -193,16 +211,23 @@ function handleReturnParams(request) {
 }
 
 function handleReturnSecrets(request) {
-  document.getElementById('loader').style.display = "none";
+  // document.getElementById('loader').style.display = "none";
   let secretsDiv = document.getElementById('secrets-results');
-  secretsDiv.textContent = '';
-  secretsDiv.style.display = 'block';
+  document.getElementById('secrets-loader').style.display = "none";
+  // secretsDiv.textContent = '';
+  // secretsDiv.style.display = 'block';
 
   let uniqueSecrets = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
 
   if (uniqueSecrets.length === 0) {
     secretsDiv.textContent = 'No secrets found.';
+    secretsDiv.style.display = 'flex';
+    secretsDiv.style.alignItems = 'center';
+    secretsDiv.style.justifyContent = 'center';
     return;
+  } else {
+    secretsDiv.style.display = 'block';
+    secretsDiv.textContent = '';
   }
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -230,10 +255,6 @@ function appendEndpointToResultsDiv(endpointObj, resultsDiv) {
   resultsDiv.style.display = 'block';
   var endpointElement = document.createElement('div');
   endpointElement.classList.add('url-box');
-  // endpointElement.style.border = "1px solid #ddd";
-  // endpointElement.style.padding = "10px";
-  // endpointElement.style.marginBottom = "10px";
-  // endpointElement.style.borderRadius = "5px";
 
   var a = document.createElement('a');
   a.classList.add('url-link');
@@ -244,17 +265,7 @@ function appendEndpointToResultsDiv(endpointObj, resultsDiv) {
     chrome.tabs.create({ url: endpointObj.endpoint });
   });
 
-  // var sourceLink = document.createElement('a');
-  // sourceLink.classList.add('source-link');
-
-  // sourceLink.textContent = '(found in ' + endpointObj.source + ')';
-  // sourceLink.href = endpointObj.source;
-  // sourceLink.target = "_blank";
-  // sourceLink.style.color = "gray";
-
   endpointElement.appendChild(a);
-  // endpointElement.appendChild(sourceLink);
-
   resultsDiv.appendChild(endpointElement);
 }
 
