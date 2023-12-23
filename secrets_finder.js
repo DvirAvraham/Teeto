@@ -41,11 +41,8 @@
 
   const secretsResults = new Set;
 
-  function addSecret(secretToAdd, source) {
-    const exists = Array.from(secretsResults).some(result => result.secret === secretToAdd.secret);
-    if (!exists) {
+  function addSecret(secretToAdd) {
       secretsResults.add({ name: secretToAdd.name, secret: secretToAdd.secret });
-    }
   }
 
   function fetchAndTestRegex(scriptSrc) {
@@ -59,8 +56,7 @@
           const key = Object.keys(regex)[0];
           var matches = scriptContent.matchAll(value);
           for (const match of matches) {
-            console.log(key + ' ---> ' + match[0]);
-            addSecret({ name: key, secret: match[0] })
+            isExist(match[0]) || addSecret({ name: key, secret: match[0] })
           }
         }
       })
@@ -83,11 +79,13 @@
     const key = Object.keys(regex)[0];
     var matches = pageContent.matchAll(value);
     for (const match of matches) {
-      console.log(match[0]);
-      addSecret({ name: key, secret: match[0] })
+      isExist(match[0]) || addSecret({ name: key, secret: match[0] })
     }
   }
 
+  function isExist(secretToAdd){
+    return Array.from(secretsResults).some(result => result.secret === secretToAdd);
+  }
   function writeResults() {
     const output = Array.from(secretsResults).sort(function (a, b) {
       return a.endpoint.localeCompare(b.endpoint);
@@ -99,6 +97,5 @@
     chrome.runtime.sendMessage({ action: "returnSecrets", data: writeResults() }))
 
 })();
-
 
 
