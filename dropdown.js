@@ -1,124 +1,117 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Function to initialize dropdown
-    function initializeDropdown(dropdown) {
-        const selectedOption = dropdown.querySelector('.selected-option');
-        const optionsContainer = dropdown.querySelector('.options-container');
-
-        // Toggle dropdown
-        selectedOption.addEventListener('click', function (event) {
-            console.log('clicked - Toggle dropdown');
-            optionsContainer.style.display = optionsContainer.style.display === 'block' ? 'none' : 'block';
-            event.stopPropagation(); // Prevents document click listener from immediately closing the dropdown
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (e) {
-            if (!dropdown.contains(e.target)) {
-                optionsContainer.style.display = 'none';
-            }
-        });
-    }
-
-    // Initialize each dropdown
-    const dropdown1 = document.getElementById('dropdown-1');
-    const dropdown2 = document.getElementById('dropdown-2');
-    const dropdown3 = document.getElementById('dropdown-3');
-
-    initializeDropdown(dropdown1);
-    initializeDropdown(dropdown2);
-    initializeDropdown(dropdown3);
+  initializeDropdowns(['dropdown-1', 'dropdown-2', 'dropdown-3']);
+  getCurrentDomain(domain => {
+    setupDomainSpecificListeners(domain);
+  });
 });
 
-document.getElementById('copy-all').addEventListener('click', function () {
-    chrome.storage.local.get(['endpoints'], function (result) {
-      var text = result.endpoints.map(e => e.endpoint).join('\n');
-      navigator.clipboard.writeText(text).then(function () {
-        document.getElementById('copy-msg').style.display = 'block'
-        setTimeout(() => {
-          document.getElementById('copy-msg').style.display = 'none'
-        }, 1000)
-      });
-    });
+function getCurrentDomain(callback) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    if (tabs.length === 0 || !tabs[0].url) {
+      console.error('Error: No active tab found.');
+      return;
+    }
+    const url = new URL(tabs[0].url);
+    const domain = url.hostname;
+    callback(domain);
   });
-  
-  document.getElementById('export-all').addEventListener('click', function () {
-    console.log('exporting');
-    chrome.storage.local.get(['endpoints'], function (result) {
-      // Adding CSV headers for 'endpoint' and 'source'
-      var csvContent = "Endpoint,Source\n"; // CSV headers
-      // Converting each endpoint object to CSV format
-      result.endpoints.forEach(function (e) {
-        var row = `${e.endpoint},${e.source}`; // Create a CSV row
-        csvContent += row + "\n";
-      });
-  
-      // Creating a Blob for the CSV content
-      var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-      // Using FileSaver.js's saveAs function to save the CSV file
-      saveAs(blob, "endpoints.csv");
-    });
+}
+
+
+function initializeDropdowns(dropdownIds) {
+  dropdownIds.forEach(id => {
+    const dropdown = document.getElementById(id);
+    if (dropdown) initializeDropdown(dropdown);
   });
-  
-  document.getElementById('export-all-secrets').addEventListener('click', function () {
-    console.log('exporting');
-    chrome.storage.local.get(['secrets'], function (result) {
-      // Adding CSV headers for 'endpoint' and 'source'
-      var csvContent = "Type,Secret\n"; // CSV headers
-      // Converting each endpoint object to CSV format
-      result.secrets.forEach(function (e) {
-        var row = `${e.name},${e.secret}`; // Create a CSV row
-        csvContent += row + "\n";
-      });
-  
-      // Creating a Blob for the CSV content
-      var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-      // Using FileSaver.js's saveAs function to save the CSV file
-      saveAs(blob, "secrets.csv");
-    });
+}
+
+function setupDomainSpecificListeners(domain) {
+  chrome.storage.local.get([domain], function (result) {
+    const domainData = result[domain];
+    if (!domainData) {
+      console.error(`No data found for domain: ${domain}`);
+      return;
+    }
+
+    // Setup event listeners for domain-specific actions
+    removeExistingListeners();
+
+    document.getElementById('copy-all').addEventListener('click', () => copyData(domainData.endpoints, e => e.endpoint));
+    document.getElementById('export-all').addEventListener('click', () => exportData(domainData.endpoints, ["Endpoint", "Source"], e => [e.endpoint, e.source]));
+    document.getElementById('export-all-secrets').addEventListener('click', () => exportData(domainData.secrets, ["Name", "Secret"], e => [e.name, e.secret]));
+    document.getElementById('copy-all-params').addEventListener('click', () => copyToClipboard(domainData.params.join('\n')));
+    document.getElementById('copy-params-query').addEventListener('click', () => copyParamsAsQuery(domainData.params));
   });
-  
-  document.getElementById('copy-all-params').addEventListener('click', function () {
-    chrome.storage.local.get(['params'], function (result) {
-      var text = result.params.map(e => e).join('\n');
-      navigator.clipboard.writeText(text).then(function () {
-        document.getElementById('copy-msg').style.display = 'block'
-        setTimeout(() => {
-          document.getElementById('copy-msg').style.display = 'none'
-        }, 1000)
-      });
-    });
+}
+
+function removeExistingListeners() {
+  const elements = ['copy-all', 'export-all', 'export-all-secrets', 'copy-all-params', 'copy-params-query'];
+  elements.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      const newElement = element.cloneNode(true);
+      element.parentNode.replaceChild(newElement, element);
+    }
   });
-  
-  document.getElementById('copy-params-query').addEventListener('click', function () {
-    chrome.storage.local.get(['params'], function (result) {
-      // Assuming result.params is an array like ['param1', 'param2', ...]
-      if (result.params && Array.isArray(result.params)) {
-        // Construct the query string
-        let queryString = result.params.map((param, index) =>
-          `${encodeURIComponent(param)}=XNLV${index + 1}`
-        ).join('&');
-  
-        // Copy the query string to clipboard
-        navigator.clipboard.writeText(queryString).then(function () {
-          // Show confirmation message
-          document.getElementById('copy-msg').style.display = 'block';
-          setTimeout(() => {
-            document.getElementById('copy-msg').style.display = 'none';
-          }, 1000);
-        }).catch(function (error) {
-          // Handle errors (e.g., Clipboard API not available)
-          console.error('Error copying text: ', error);
-        });
-      } else {
-        console.error('Params are not available or not in expected format.');
-      }
-    });
+}
+
+function initializeDropdown(dropdown) {
+  const selectedOption = dropdown.querySelector('.selected-option');
+  const optionsContainer = dropdown.querySelector('.options-container');
+
+  selectedOption.addEventListener('click', event => {
+    optionsContainer.style.display = optionsContainer.style.display === 'block' ? 'none' : 'block';
+    event.stopPropagation();
   });
-  
-  
-  function saveAs(blob, filename) {
-    var link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = filename;
-    link.click();
+
+  document.addEventListener('click', event => {
+    if (!dropdown.contains(event.target)) {
+      optionsContainer.style.display = 'none';
+    }
+  });
+}
+
+function copyData(dataArray, mapFunction) {
+  if (!dataArray) {
+    console.error(`Data not found`);
+    return;
   }
+  const text = dataArray.map(mapFunction).join('\n');
+  copyToClipboard(text);
+}
+
+
+function exportData(dataArray, headers, mapFunction) {
+  if (!dataArray) {
+    console.error(`Data not found`);
+    return;
+  }
+  let csvContent = headers.join(",") + "\n";
+  dataArray.forEach(item => {
+    csvContent += mapFunction(item).join(",") + "\n";
+  });
+  saveAs(new Blob([csvContent], { type: "text/csv;charset=utf-8" }), 'export.csv');
+}
+
+function copyParamsAsQuery(params) {
+  if (!params || !Array.isArray(params)) {
+    console.error('Params are not available or not in expected format.');
+    return;
+  }
+  const queryString = params.map((param, index) => `${encodeURIComponent(param)}=XNLV${index + 1}`).join('&');
+  copyToClipboard(queryString);
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copy-msg').style.display = 'block';
+    setTimeout(() => document.getElementById('copy-msg').style.display = 'none', 1000);
+  }).catch(error => console.error('Error copying text: ', error));
+}
+
+function saveAs(blob, filename) {
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+}
