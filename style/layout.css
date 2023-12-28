@@ -10,7 +10,52 @@ body {
     margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
     margin: 0;
 }
 
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    /* margin-right: 5000px; */
+    /* padding-right: 10px; */
+}
+
+::-webkit-scrollbar-button {
+    width: 0px;
+    height: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #25bffb;
+    border: 0px none #ffffff;
+    border-radius: 50px;
+}
+
+/* ::-webkit-scrollbar-thumb:hover {
+  background: #e1e1e1;
+} */
+/* ::-webkit-scrollbar-thumb:active {
+  background: #282f32;
+} */
+::-webkit-scrollbar-track {
+    background: #f7f7f7;
+    border: 0px none #ffffff;
+    border-radius: 50px;
+}
+
+/* ::-webkit-scrollbar-track:hover {
+  background: #4c4848;
+} */
+/* ::-webkit-scrollbar-track:active {
+  background: #c3c1c1;
+} */
+::-webkit-scrollbar-corner {
+    background: transparent;
+}

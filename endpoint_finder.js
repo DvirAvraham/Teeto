@@ -98,10 +98,10 @@
   }
 
   new Promise(resolve => setTimeout(resolve, 3e3)).then(() =>
-    chrome.runtime.sendMessage({ action: "returnResults", data: writeResults() }))
+    chrome.runtime.sendMessage({ action: "returnResults", data: writeResults(), params: paramNameSet }))
 
-  new Promise(resolve => setTimeout(resolve, 6e3)).then(() =>
-    chrome.runtime.sendMessage({ action: "returnParams", data: paramNameSet }))
+  // new Promise(resolve => setTimeout(resolve, 6e3)).then(() =>
+  //   chrome.runtime.sendMessage({ action: "returnParams", data: paramNameSet }))
 
 })();
 

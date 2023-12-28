@@ -17,7 +17,6 @@ function getCurrentDomain(callback) {
   });
 }
 
-
 function initializeDropdowns(dropdownIds) {
   dropdownIds.forEach(id => {
     const dropdown = document.getElementById(id);
@@ -79,7 +78,6 @@ function copyData(dataArray, mapFunction) {
   const text = dataArray.map(mapFunction).join('\n');
   copyToClipboard(text);
 }
-
 
 function exportData(dataArray, headers, mapFunction) {
   if (!dataArray) {
