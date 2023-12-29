@@ -13,8 +13,6 @@
 .data-container h3 {
     color: #6c6c6c;
     text-transform: uppercase;
-    /* margin-top: 20px; */
-
 }
 
 .domain-name p {
@@ -32,11 +30,9 @@
 }
 
 .loader{
-    /* display: flex; */
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    
     height: 100%;
     width: 100%;
     border: 1px solid #ccc;

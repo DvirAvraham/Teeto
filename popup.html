@@ -7,8 +7,7 @@
   <title>Document</title>
   <link rel="stylesheet" href="style/main.css">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="loaders/dist/loading-bar.css" />
-  <script type="text/javascript" src="loaders/dist/loading-bar.js"></script>
+  <script lang="javascript" src="/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -21,8 +20,12 @@
       <p class="app-title">Teeto</p>
     </div>
     <div class="header-end">
-      <button class="btn" id="clear-results" style="display: block; " title="Restart">
+      <button class="btn" id="clear-results" style="display: none; " title="Restart">
         <i class="ri-restart-line"></i>
+        <!-- Refresh -->
+      </button>
+      <button class="btn" id="download-all-data" style="display: block; " title="Download">
+        <i class="ri-download-line"></i>
         <!-- Refresh -->
       </button>
     </div>
@@ -33,7 +36,7 @@
     <div class="start-container" id="start-container">
       <div class="intro">
         <h1>Welcome</h1>
-        <p>Teeto is a powerful tool designed to enhance your penetration testing efforts.</p>
+        <p>Teeto is designed to enhance your penetration testing efforts.</p>
         <div class="intro-use">
           <h3>How to use:</h3>
           <ul>
@@ -79,6 +82,10 @@
               <div id="export-all">
                 <i class="ri-file-download-line"></i>
                 Download CSV
+              </div>
+              <div id="open-all-urls">
+                <i class="ri-links-line"></i>
+                Open All URLs
               </div>
             </div>
           </div>

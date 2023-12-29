@@ -1,21 +1,24 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   initializeDropdowns(['dropdown-1', 'dropdown-2', 'dropdown-3']);
-  getCurrentDomain(domain => {
-    setupDomainSpecificListeners(domain);
-  });
+  const domain = await getCurrentDomain();
+  setupDomainSpecificListeners(domain);
 });
 
-function getCurrentDomain(callback) {
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    if (tabs.length === 0 || !tabs[0].url) {
-      console.error('Error: No active tab found.');
-      return;
-    }
-    const url = new URL(tabs[0].url);
-    const domain = url.hostname;
-    callback(domain);
+async function getCurrentDomain() {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs.length === 0 || !tabs[0].url) {
+        console.error('Error: No active tab found.');
+        reject('No active tab found.');
+        return;
+      }
+      const url = new URL(tabs[0].url);
+      const domain = url.hostname;
+      resolve(domain);
+    });
   });
 }
+
 
 function initializeDropdowns(dropdownIds) {
   dropdownIds.forEach(id => {
@@ -24,8 +27,9 @@ function initializeDropdowns(dropdownIds) {
   });
 }
 
-function setupDomainSpecificListeners(domain) {
-  chrome.storage.local.get([domain], function (result) {
+async function setupDomainSpecificListeners(domain) {
+  try {
+    const result = await getChromeStorage(domain);
     const domainData = result[domain];
     if (!domainData) {
       console.error(`No data found for domain: ${domain}`);
@@ -40,7 +44,69 @@ function setupDomainSpecificListeners(domain) {
     document.getElementById('export-all-secrets').addEventListener('click', () => exportData(domainData.secrets, ["Name", "Secret"], e => [e.name, e.secret]));
     document.getElementById('copy-all-params').addEventListener('click', () => copyToClipboard(domainData.params.join('\n')));
     document.getElementById('copy-params-query').addEventListener('click', () => copyParamsAsQuery(domainData.params));
+    document.getElementById('open-all-urls').addEventListener('click', () => openAllUrls(domainData.endpoints));
+    document.getElementById('download-all-data').addEventListener('click', () => {
+      const data = {
+        endpoints: domainData.endpoints,
+        secrets: domainData.secrets,
+        params: domainData.params
+      };
+      downloadAllDataInXlsx(data, domain);
+    }
+    );
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function downloadAllDataInXlsx(data, domainName) {
+  // Create a new workbook
+  let workbook = XLSX.utils.book_new();
+
+  // Add a sheet for each data type
+  if (data.endpoints && data.endpoints.length > 0) {
+    let wsEndpoints = XLSX.utils.json_to_sheet(data.endpoints);
+    XLSX.utils.book_append_sheet(workbook, wsEndpoints, 'Endpoints');
+  }
+
+  if (data.secrets && data.secrets.length > 0) {
+    let wsSecrets = XLSX.utils.json_to_sheet(data.secrets);
+    XLSX.utils.book_append_sheet(workbook, wsSecrets, 'Secrets');
+  }
+
+  if (data.params && data.params.length > 0) {
+    // Converting params to a format suitable for SheetJS
+    let paramsFormatted = data.params.map(param => ({ Param: param }));
+    let wsParams = XLSX.utils.json_to_sheet(paramsFormatted);
+    XLSX.utils.book_append_sheet(workbook, wsParams, 'Params');
+  }
+
+  // Generate and save the file
+  const fileName = `${domainName}-data.xlsx`; // Use the domain name in the file name
+  XLSX.writeFile(workbook, fileName);
+}
+
+async function getChromeStorage(key) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get([key], function (result) {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else {
+        resolve(result);
+      }
+    });
   });
+}
+
+function openAllUrls(endpoints) {
+  if (!endpoints || !Array.isArray(endpoints)) {
+    console.error('Endpoints are not available or not in expected format.');
+    return;
+  }
+  endpoints.forEach(endpoint => {
+    chrome.tabs.create({ url: endpoint.endpoint });
+  }
+  );
 }
 
 function removeExistingListeners() {

@@ -3,14 +3,12 @@
 }
 
 .start-btn {
-    /* display: flex; */
     padding: 10px;
     text-align: center;
     border-radius: 20px;
     border: 1px solid #ccc;
     background-color: #286FF7;
     cursor: pointer;
-    /* transition: background-color 0.3s; */
     font-size: 14px;
     color: white;
     font-family: NotoSansJP-Regular;
@@ -27,7 +25,6 @@
 }
 
 .intro p {
-    /* margin: 0; */
     font-size: 15px;
     color: #6c6c6c;
 }

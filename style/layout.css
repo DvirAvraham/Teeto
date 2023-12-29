@@ -23,8 +23,6 @@ p {
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
-    /* margin-right: 5000px; */
-    /* padding-right: 10px; */
 }
 
 ::-webkit-scrollbar-button {
@@ -33,29 +31,17 @@ p {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #25bffb;
+    background: #6c6c6c;
     border: 0px none #ffffff;
     border-radius: 50px;
 }
 
-/* ::-webkit-scrollbar-thumb:hover {
-  background: #e1e1e1;
-} */
-/* ::-webkit-scrollbar-thumb:active {
-  background: #282f32;
-} */
 ::-webkit-scrollbar-track {
     background: #f7f7f7;
     border: 0px none #ffffff;
     border-radius: 50px;
 }
 
-/* ::-webkit-scrollbar-track:hover {
-  background: #4c4848;
-} */
-/* ::-webkit-scrollbar-track:active {
-  background: #c3c1c1;
-} */
 ::-webkit-scrollbar-corner {
     background: transparent;
 }
