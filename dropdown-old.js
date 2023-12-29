@@ -81,7 +81,7 @@ document.getElementById('copy-all').addEventListener('click', function () {
     chrome.storage.local.get(['params'], function (result) {
       var text = result.params.map(e => e).join('\n');
       navigator.clipboard.writeText(text).then(function () {
-        document.getElementById('copy-msg').style.display = 'block'
+        document.getElementById('copy-msg').style.display = 'flex'
         setTimeout(() => {
           document.getElementById('copy-msg').style.display = 'none'
         }, 1000)
@@ -101,7 +101,7 @@ document.getElementById('copy-all').addEventListener('click', function () {
         // Copy the query string to clipboard
         navigator.clipboard.writeText(queryString).then(function () {
           // Show confirmation message
-          document.getElementById('copy-msg').style.display = 'block';
+          document.getElementById('copy-msg').style.display = 'flex';
           setTimeout(() => {
             document.getElementById('copy-msg').style.display = 'none';
           }, 1000);

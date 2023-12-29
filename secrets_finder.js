@@ -42,59 +42,60 @@
   const secretsResults = new Set;
 
   function addSecret(secretToAdd) {
+    if (!isExist(secretToAdd.secret)) {
       secretsResults.add({ name: secretToAdd.name, secret: secretToAdd.secret });
+    }
   }
 
   function fetchAndTestRegex(scriptSrc) {
     fetch(scriptSrc)
-      .then(function (response) {
-        return response.text()
-      })
-      .then(function (scriptContent) {
-        for (const regex of secretsRegex) {
-          const value = Object.values(regex)[0];
+      .then(response => response.text())
+      .then(scriptContent => {
+        secretsRegex.forEach(regex => {
+          const pattern = new RegExp(Object.values(regex)[0], 'g');
           const key = Object.keys(regex)[0];
-          var matches = scriptContent.matchAll(value);
+          const matches = scriptContent.matchAll(pattern);
           for (const match of matches) {
-            isExist(match[0]) || addSecret({ name: key, secret: match[0] })
+            addSecret({ name: key, secret: match[0] });
           }
-        }
+        });
       })
-      .catch(function (error) {
-        console.log("An error occurred: ", error)
+      .catch(error => {
+        console.error("An error occurred while fetching:", scriptSrc, error);
       });
   }
 
-  for (var i = 0; i < scripts.length; i++) {
-    var scriptSrc = scripts[i].src;
-    if (scriptSrc != "") {
-      fetchAndTestRegex(scriptSrc);
+  for (let script of scripts) {
+    if (script.src) {
+      fetchAndTestRegex(script.src);
     }
   }
 
   const pageContent = document.documentElement.outerHTML;
 
-  for (const regex of secretsRegex) {
-    const value = Object.values(regex)[0];
+  secretsRegex.forEach(regex => {
+    const pattern = new RegExp(Object.values(regex)[0], 'g');
     const key = Object.keys(regex)[0];
-    var matches = pageContent.matchAll(value);
+    const matches = pageContent.matchAll(pattern);
     for (const match of matches) {
-      isExist(match[0]) || addSecret({ name: key, secret: match[0] })
+      addSecret({ name: key, secret: match[0] });
     }
+  });
+
+  function isExist(secret) {
+    return Array.from(secretsResults).some(result => result.secret === secret);
   }
 
-  function isExist(secretToAdd){
-    return Array.from(secretsResults).some(result => result.secret === secretToAdd);
-  }
   function writeResults() {
-    const output = Array.from(secretsResults).sort(function (a, b) {
-      return a.endpoint.localeCompare(b.endpoint);
+    const output = Array.from(secretsResults).sort((a, b) => {
+      return a.name.localeCompare(b.name);
     });
     return output;
   }
 
-  new Promise(resolve => setTimeout(resolve, 3e3)).then(() =>
-    chrome.runtime.sendMessage({ action: "returnSecrets", data: writeResults() }))
+  new Promise(resolve => setTimeout(resolve, 3000)).then(() => {
+    chrome.runtime.sendMessage({ action: "returnSecrets", data: writeResults() });
+  });
 
 })();
 

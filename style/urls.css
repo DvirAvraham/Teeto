@@ -32,7 +32,7 @@
 }
 
 .url-link {
-    max-width: min-content;
+    /* max-width: min-content; */
     word-wrap: break-word;
 }
 

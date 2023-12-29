@@ -45,6 +45,7 @@ async function setupDomainSpecificListeners(domain) {
     document.getElementById('copy-all-params').addEventListener('click', () => copyToClipboard(domainData.params.join('\n')));
     document.getElementById('copy-params-query').addEventListener('click', () => copyParamsAsQuery(domainData.params));
     document.getElementById('open-all-urls').addEventListener('click', () => openAllUrls(domainData.endpoints));
+    //Suppoused to be in popup.js TODO: fix
     document.getElementById('download-all-data').addEventListener('click', () => {
       const data = {
         endpoints: domainData.endpoints,
@@ -168,7 +169,7 @@ function copyParamsAsQuery(params) {
 
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(() => {
-    document.getElementById('copy-msg').style.display = 'block';
+    document.getElementById('copy-msg').style.display = 'flex';
     setTimeout(() => document.getElementById('copy-msg').style.display = 'none', 1000);
   }).catch(error => console.error('Error copying text: ', error));
 }

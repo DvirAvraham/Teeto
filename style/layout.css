@@ -1,12 +1,12 @@
 html {
-    height: 100%;
+    /* height: 100%; */
     font-family: NotoSansJP-Regular;
     color: rgb(44, 43, 43);
 }
 
 body {
     width: 400px;
-    height: 100%;
+    /* height: 100%; */
     margin: 0;
 }
 

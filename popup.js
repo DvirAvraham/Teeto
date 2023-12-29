@@ -3,31 +3,50 @@ loadDataForCurrentDomain();
 
 // Main Functions
 async function loadDataForCurrentDomain() {
-  const domain = await getCurrentTabDomain();
-  if (!domain) return;
+  try {
+    const domain = await getCurrentTabDomain();
+    if (!domain) return;
 
-  const domainData = await getDomainData(domain);
-  if (domainData && (domainData.endpoints.length > 0 || domainData.secrets.length > 0 || domainData.params.length > 0)) {
-    // Data exists for this domain, display the data container
-    displayDataContainer();
-    loadDomainDataToUI(domainData['endpoints'], 'endpoints');
-    loadDomainDataToUI(domainData['secrets'], 'secrets');
-    loadDomainDataToUI(domainData['params'], 'params');
-  } else {
-    // No data for this domain, display the start container
-    displayStartContainer();
+    const domainData = await getDomainData(domain);
+    if (domainData && (domainData.endpoints.length > 0 || domainData.secrets.length > 0 || domainData.params.length > 0)) {
+      // Data exists for this domain, display the data container
+      displayDataContainer();
+      document.getElementById('clear-results').style.display = "block";
+      document.getElementById('download-all-data').style.display = "block";
+      loadDomainDataToUI(domainData['endpoints'], 'endpoints');
+      loadDomainDataToUI(domainData['secrets'], 'secrets');
+      loadDomainDataToUI(domainData['params'], 'params');
+    } else {
+      // No data for this domain, display the start container
+      displayStartContainer();
+    }
+  } catch (error) {
+    console.error('Error in loadDataForCurrentDomain:', error);
+  }
+}
+
+async function initializeDomainData(domain) {
+  try {
+    const result = await getDomainData(domain);
+    if (!result) {
+      await setDomainData(domain, { 'endpoints': [], 'params': [], 'secrets': [] });
+    }
+  } catch (error) {
+    console.error('Error initializing domain data:', error);
+    // Handle error appropriately
   }
 }
 
 function displayDataContainer() {
   document.getElementById('data-container').style.display = "block";
   document.getElementById('start-container').style.display = "none";
-  document.getElementById('clear-results').style.display = "block";
+  document.getElementById('footer').style.display = "flex";
 }
 
 function displayStartContainer() {
   document.getElementById('data-container').style.display = "none";
   document.getElementById('start-container').style.display = "block";
+  document.getElementById('footer').style.display = "none";
 }
 
 function loadDomainDataToUI(dataArray, dataType) {
@@ -62,41 +81,89 @@ function appendDataToDiv(dataObj, dataType) {
   }
 }
 
-// Initiate Finder With Setting Domain
-document.getElementById('find-endpoints').addEventListener('click', function () {
-  document.getElementById('data-container').style.display = "block";
-  document.getElementById('start-container').style.display = "none";
-  document.getElementById('endpoints-loader').style.display = "flex";
-  document.getElementById('params-loader').style.display = "flex";
-  document.getElementById('secrets-loader').style.display = "flex";
+document.getElementById('find-endpoints').addEventListener('click', async function () {
+  try {
+    // Update UI
+    displayDataContainer();
+    document.getElementById('endpoints-loader').style.display = "flex";
+    document.getElementById('params-loader').style.display = "flex";
+    document.getElementById('secrets-loader').style.display = "flex";
+    document.getElementById('loading-progress').style.display = "flex";
 
-  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    const activeTab = tabs[0];
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tabs.length > 0) {
+      const url = new URL(tabs[0].url);
+      const domain = url.hostname;
+      const tabId = tabs[0].id;
 
-    // Store the domain of the current tab
-    let url = new URL(activeTab.url);
-    let domain = url.hostname;
+      await initializeDomainData(domain);
 
-    // Initialize domain data structure
-    chrome.storage.local.get([domain], function (result) {
-      if (!result[domain]) {
-        chrome.storage.local.set({ [domain]: { 'endpoints': [], 'params': [], 'secrets': [] } });
+      // Execute scripts separately
+      console.log('Executing endpoint finder');
+      await executeEndpointFinder(tabId);
+
+      await waitForEndpointResults();
+
+      console.log('Executing secrets finder');
+      await executeSecretsFinder(tabId);
+
+      // waitForSecretsResults();
+
+
+    }
+  } catch (error) {
+    console.error('Error in find-endpoints event listener:', error);
+    // Handle error appropriately
+  }
+});
+
+function waitForEndpointResults() {
+  return new Promise((resolve) => {
+    chrome.runtime.onMessage.addListener(function listener(request, sender, sendResponse) {
+      if (request.action === "returnResults") {
+        chrome.runtime.onMessage.removeListener(listener);
+        resolve();
       }
     });
-
-    // First, execute endpoint_finder.js
-    chrome.scripting.executeScript({
-      target: { tabId: activeTab.id },
-      files: ['endpoint_finder.js']
-    }, function () {
-      // Once the first script has executed, execute secrets_finder.js
-      chrome.scripting.executeScript({
-        target: { tabId: activeTab.id },
-        files: ['secrets_finder.js']
-      });
-    });
   });
-});
+}
+
+// function waitForSecretsResults() {
+//   return new Promise((resolve) => {
+//     chrome.runtime.onMessage.addListener(function listener(request, sender, sendResponse) {
+//       if (request.action === "returnSecrets") {
+//         chrome.runtime.onMessage.removeListener(listener);
+//         resolve();
+//       }
+//     });
+//   });
+// }
+
+async function executeEndpointFinder(tabId) {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId: tabId },
+      files: ['endpoint_finder.js']
+    });
+    console.log('Endpoint Finder Script Executed');
+  } catch (error) {
+    console.error('Error executing Endpoint Finder Script:', error);
+    // Handle error appropriately
+  }
+}
+
+async function executeSecretsFinder(tabId) {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId: tabId },
+      files: ['secrets_finder.js']
+    });
+    console.log('Secrets Finder Script Executed');
+  } catch (error) {
+    console.error('Error executing Secrets Finder Script:', error);
+    // Handle error appropriately
+  }
+}
 
 document.getElementById('clear-results').addEventListener('click', function () {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -111,6 +178,9 @@ document.getElementById('clear-results').addEventListener('click', function () {
         document.getElementById('params-results').style.display = 'none';
         document.getElementById('data-container').style.display = 'none';
         document.getElementById('start-container').style.display = 'block';
+        document.getElementById('clear-results').style.display = "none";
+        document.getElementById('download-all-data').style.display = "none";
+        document.getElementById('footer').style.display = "none";
       });
     }
   });
@@ -157,6 +227,7 @@ async function handleReturnResults(request) {
 
   if (uniqueEndpoints.length === 0) {
     displayNoDataFound(resultsDiv, 'endpoints');
+    document.getElementById('endpoints-loader').style.display = "none";
     return;
   }
 
@@ -180,7 +251,8 @@ async function handleReturnResults(request) {
 
   document.getElementById('params-loader').style.display = "none";
   document.getElementById('endpoints-loader').style.display = "none";
-
+  document.getElementById('clear-results').style.display = "block";
+  document.getElementById('download-all-data').style.display = "block";
 }
 
 async function handleReturnParams(params) {
@@ -189,6 +261,7 @@ async function handleReturnParams(params) {
   let uniqueParams = Array.from(new Set(params.map(JSON.stringify))).map(JSON.parse);
   if (uniqueParams.length === 0) {
     displayNoDataFound(paramsDiv, 'params');
+    document.getElementById('params-loader').style.display = "none";
     return [];
   }
 
@@ -203,11 +276,15 @@ async function handleReturnParams(params) {
 }
 
 async function handleReturnSecrets(request) {
+  console.log('Secrets:', request.data);
   let secretsDiv = document.getElementById('secrets-results');
 
   let uniqueSecrets = Array.from(new Set(request.data.map(JSON.stringify))).map(JSON.parse);
+
   if (uniqueSecrets.length === 0) {
     displayNoDataFound(secretsDiv, 'secrets');
+    document.getElementById('secrets-loader').style.display = "none";
+    document.getElementById('loading-progress').style.display = "none";
     return;
   }
 
@@ -226,6 +303,7 @@ async function handleReturnSecrets(request) {
     appendSecretToResultsDiv(secretObj, secretsDiv);
   });
 
+  document.getElementById('loading-progress').style.display = "none";
   document.getElementById('secrets-loader').style.display = "none";
 
 }

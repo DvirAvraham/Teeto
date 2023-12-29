@@ -1,5 +1,6 @@
 .data-container {
-    padding: 10px 20px;
+    padding: 10px 20px 10px 20px;
+
 }
 
 .domain-name {
@@ -29,7 +30,7 @@
     padding: 5px;
 }
 
-.loader{
+.loader {
     align-items: center;
     justify-content: center;
     flex-direction: column;
@@ -42,4 +43,25 @@
     gap: 10px;
     font-size: 14px;
 
+}
+
+.container-end {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 20px 20px;
+    width: 100%;
+}
+
+#copy-msg {
+    display: flex;
+    justify-self: end;
+    justify-content: end;
+
+    align-items: end;
+    gap: 5px;
+    font-size: 14px;
+    color: #ffffff;
+    background-color: #44b44b;
 }
