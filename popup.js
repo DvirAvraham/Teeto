@@ -48,7 +48,8 @@ function loadDomainDataToUI(dataArray, dataType) {
     });
   } else {
     resultsDiv.style.display = 'flex';
-    resultsDiv.textContent = 'No ' + dataType + ' found.';
+    // resultsDiv.textContent = 'No ' + dataType + ' found.';
+    resultsDiv.innerHTML = '<img class="nothing-found" src="imgs/7486754.png" >'
     resultsDiv.style.alignItems = 'center';
     resultsDiv.style.justifyContent = 'center';
   }
@@ -423,7 +424,8 @@ async function setDomainData(domain, data) {
 }
 
 function displayNoDataFound(element, dataType) {
-  element.textContent = `No ${dataType} found.`;
+  // element.textContent = `No ${dataType} found.`;
+  element.innerHTML = '<img class="nothing-found" src="imgs/7486754.png" >'
   element.style.display = 'flex';
   element.style.alignItems = 'center';
   element.style.justifyContent = 'center';

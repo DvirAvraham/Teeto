@@ -82,3 +82,7 @@
     align-items: center;
     /* gap: 10px; */
 }
+
+.nothing-found{
+    height: 161px;
+}
