@@ -65,3 +65,19 @@
     padding: 3px 8px 4px 8px;
     font-family: NotoSansJP-Regular;
 }
+
+#scan-again{
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #F7F7F7;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    background-color: #286FF7;
+    cursor: pointer;
+    font-size: 13px;
+    color: white;
+    margin: 0;
+    padding: 3px 8px 4px 8px;
+    font-family: NotoSansJP-Regular;
+}

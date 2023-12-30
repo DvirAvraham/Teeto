@@ -13,6 +13,7 @@ async function loadDataForCurrentDomain() {
       displayDataContainer();
       document.getElementById('clear-results').style.display = "block";
       document.getElementById('download-all-data').style.display = "block";
+      document.getElementById('scan-again').style.display = "block";
       loadDomainDataToUI(domainData['endpoints'], 'endpoints');
       loadDomainDataToUI(domainData['secrets'], 'secrets');
       loadDomainDataToUI(domainData['params'], 'params');
@@ -35,18 +36,6 @@ async function initializeDomainData(domain) {
     console.error('Error initializing domain data:', error);
     // Handle error appropriately
   }
-}
-
-function displayDataContainer() {
-  document.getElementById('data-container').style.display = "block";
-  document.getElementById('start-container').style.display = "none";
-  document.getElementById('footer').style.display = "flex";
-}
-
-function displayStartContainer() {
-  document.getElementById('data-container').style.display = "none";
-  document.getElementById('start-container').style.display = "block";
-  document.getElementById('footer').style.display = "none";
 }
 
 function loadDomainDataToUI(dataArray, dataType) {
@@ -81,6 +70,7 @@ function appendDataToDiv(dataObj, dataType) {
   }
 }
 
+//init
 document.getElementById('find-endpoints').addEventListener('click', async function () {
   try {
     // Update UI
@@ -107,9 +97,44 @@ document.getElementById('find-endpoints').addEventListener('click', async functi
       console.log('Executing secrets finder');
       await executeSecretsFinder(tabId);
 
+      waitForSecretsResults();
+
+      document.getElementById('scan-again').style.display = "block";
+
+
+    }
+  } catch (error) {
+    console.error('Error in find-endpoints event listener:', error);
+    // Handle error appropriately
+  }
+});
+
+//scan again
+document.getElementById('scan-again').addEventListener('click', async function () {
+  try {
+    // Update UI
+    document.getElementById('endpoints-loader').style.display = "flex";
+    document.getElementById('params-loader').style.display = "flex";
+    document.getElementById('secrets-loader').style.display = "flex";
+    document.getElementById('loading-progress').style.display = "flex";
+    document.getElementById('endpoints-results').style.display = 'none';
+    document.getElementById('secrets-results').style.display = 'none';
+    document.getElementById('params-results').style.display = 'none';
+
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tabs.length > 0) {
+      const tabId = tabs[0].id;
+
+      // Execute scripts separately
+      console.log('Executing endpoint finder');
+      await executeEndpointFinder(tabId);
+
+      await waitForEndpointResults();
+
+      console.log('Executing secrets finder');
+      await executeSecretsFinder(tabId);
+
       // waitForSecretsResults();
-
-
     }
   } catch (error) {
     console.error('Error in find-endpoints event listener:', error);
@@ -128,16 +153,16 @@ function waitForEndpointResults() {
   });
 }
 
-// function waitForSecretsResults() {
-//   return new Promise((resolve) => {
-//     chrome.runtime.onMessage.addListener(function listener(request, sender, sendResponse) {
-//       if (request.action === "returnSecrets") {
-//         chrome.runtime.onMessage.removeListener(listener);
-//         resolve();
-//       }
-//     });
-//   });
-// }
+function waitForSecretsResults() {
+  return new Promise((resolve) => {
+    chrome.runtime.onMessage.addListener(function listener(request, sender, sendResponse) {
+      if (request.action === "returnSecrets") {
+        chrome.runtime.onMessage.removeListener(listener);
+        resolve();
+      }
+    });
+  });
+}
 
 async function executeEndpointFinder(tabId) {
   try {
@@ -181,6 +206,8 @@ document.getElementById('clear-results').addEventListener('click', function () {
         document.getElementById('clear-results').style.display = "none";
         document.getElementById('download-all-data').style.display = "none";
         document.getElementById('footer').style.display = "none";
+        document.getElementById('scan-again').style.display = "none";
+
       });
     }
   });
@@ -398,4 +425,16 @@ function displayNoDataFound(element, dataType) {
   element.style.display = 'flex';
   element.style.alignItems = 'center';
   element.style.justifyContent = 'center';
+}
+
+function displayDataContainer() {
+  document.getElementById('data-container').style.display = "block";
+  document.getElementById('start-container').style.display = "none";
+  document.getElementById('footer').style.display = "flex";
+}
+
+function displayStartContainer() {
+  document.getElementById('data-container').style.display = "none";
+  document.getElementById('start-container').style.display = "block";
+  document.getElementById('footer').style.display = "none";
 }

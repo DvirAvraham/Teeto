@@ -34,6 +34,7 @@
 .url-link {
     /* max-width: min-content; */
     word-wrap: break-word;
+    color: #333;
 }
 
 .source-link {
