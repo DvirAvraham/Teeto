@@ -74,31 +74,40 @@
         <!-- URLS Results -->
         <div class="tab-header">
           <h3>URLS</h3>
-          <div id="dropdown-1" class="dropdown">
-            <div class="selected-option"><i class="ri-menu-3-line"></i></div>
-            <div class="options-container">
 
-              <div id="copy-all">
-                <i class="ri-file-copy-line"></i>
-                Copy All
-              </div>
+          <div class="tab-header-end">
+            <div class="search">
+              <input type="text" id="search-endpoints" class="search-input" placeholder="Search...">
+            </div>
+            <div id="dropdown-1" class="dropdown">
+              <div class="selected-option"><i class="ri-menu-3-line"></i></div>
+              <div class="options-container">
 
-              <div id="export-all">
-                <i class="ri-file-download-line"></i>
-                Download CSV
-              </div>
-              <div id="open-all-urls">
-                <i class="ri-links-line"></i>
-                Open All URLs
+                <div id="copy-all">
+                  <i class="ri-file-copy-line"></i>
+                  Copy All
+                </div>
+
+                <div id="export-all">
+                  <i class="ri-file-download-line"></i>
+                  Download CSV
+                </div>
+                <div id="open-all-urls">
+                  <i class="ri-links-line"></i>
+                  Open All URLs
+                </div>
               </div>
             </div>
           </div>
+
         </div>
 
         <div id="endpoints-loader" class="loader" style="display: none;">
           <img id="loader" src="imgs/Search.gif">
           <p>Searching For Endpoints...</p>
         </div>
+
+
 
         <div id="endpoints-results" style="display: none;">
         </div>
@@ -111,12 +120,17 @@
         <!-- Secrets Results -->
         <div class="tab-header">
           <h3>Secrets</h3>
-          <div id="dropdown-2" class="dropdown">
-            <div class="selected-option"><i class="ri-menu-3-line"></i></div>
-            <div class="options-container">
-              <div id="export-all-secrets">
-                <i class="ri-file-download-line"></i>
-                Download CSV
+          <div class="tab-header-end">
+            <div class="search">
+              <input type="text" id="search-secrets" class="search-input" placeholder="Search...">
+            </div>
+            <div id="dropdown-2" class="dropdown">
+              <div class="selected-option"><i class="ri-menu-3-line"></i></div>
+              <div class="options-container">
+                <div id="export-all-secrets">
+                  <i class="ri-file-download-line"></i>
+                  Download CSV
+                </div>
               </div>
             </div>
           </div>
@@ -135,18 +149,23 @@
       <div class="tab-content" id="params" style="display: none;">
         <div class="tab-header">
           <h3>Parameters</h3>
-          <div id="dropdown-3" class="dropdown">
-            <div class="selected-option"><i class="ri-menu-3-line"></i></div>
-            <div class="options-container">
-              <div id="copy-params-query">
-                <!-- Options will be populated here -->
-                <i class="ri-file-copy-line"></i>
-                Copy as query
-              </div>
-              <div id="copy-all-params">
-                <!-- Options will be populated here -->
-                <i class="ri-file-copy-line"></i>
-                Copy All
+          <div class="tab-header-end">
+            <div class="search">
+              <input type="text" id="search-params" class="search-input" placeholder="Search...">
+            </div>
+            <div id="dropdown-3" class="dropdown">
+              <div class="selected-option"><i class="ri-menu-3-line"></i></div>
+              <div class="options-container">
+                <div id="copy-params-query">
+                  <!-- Options will be populated here -->
+                  <i class="ri-file-copy-line"></i>
+                  Copy as query
+                </div>
+                <div id="copy-all-params">
+                  <!-- Options will be populated here -->
+                  <i class="ri-file-copy-line"></i>
+                  Copy All
+                </div>
               </div>
             </div>
           </div>
@@ -186,6 +205,7 @@
   <script src="popup.js"></script>
   <script src="dropdown.js"></script>
   <script src="tabs.js"></script>
+  <script src="search.js"></script>
 
 
 </body>

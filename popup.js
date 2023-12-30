@@ -134,7 +134,9 @@ document.getElementById('scan-again').addEventListener('click', async function (
       console.log('Executing secrets finder');
       await executeSecretsFinder(tabId);
 
-      // waitForSecretsResults();
+      waitForSecretsResults();
+
+      document.getElementById('scan-again').style.display = "block";
     }
   } catch (error) {
     console.error('Error in find-endpoints event listener:', error);
@@ -438,3 +440,4 @@ function displayStartContainer() {
   document.getElementById('start-container').style.display = "block";
   document.getElementById('footer').style.display = "none";
 }
+

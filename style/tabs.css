@@ -79,3 +79,9 @@
     background-color: #f0f0f0;
     cursor: pointer;
 }
+
+.tab-header-end{
+    display: flex;
+    align-items: center;
+    /* gap: 10px; */
+}

@@ -71,3 +71,23 @@
     right: 4%;
     font-size: 0.8rem;
 }
+
+/* Search Input Style */
+.search-input {
+    width: 100%;
+    padding: 2px 5px;
+    /* margin: 20px 0 0 0; */
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    /* border-color: #4A90E2; */
+    border-color: none;
+    outline: none;
+    /* box-shadow: 0 0 8px rgba(74, 144, 226, 0.5); */
+    box-shadow: none;
+}

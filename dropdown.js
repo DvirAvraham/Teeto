@@ -163,7 +163,7 @@ function copyParamsAsQuery(params) {
     console.error('Params are not available or not in expected format.');
     return;
   }
-  const queryString = params.map((param, index) => `${encodeURIComponent(param)}=XNLV${index + 1}`).join('&');
+  const queryString = params.map((param, index) => `${encodeURIComponent(param)}=TEETO${index + 1}`).join('&');
   copyToClipboard(queryString);
 }
 
