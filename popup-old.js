@@ -86,7 +86,7 @@ function appendDataToDiv(dataObj, dataType) {
 // Initiate Finder With Setting Domain
 document.getElementById('find-endpoints').addEventListener('click', function () {
   document.getElementById('data-container').style.display = "block";
-  document.getElementById('start-container').style.display = "none";
+  // document.getElementById('start-container').style.display = "none";
   document.getElementById('loader').style.display = "block";
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
