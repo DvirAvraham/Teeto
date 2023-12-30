@@ -64,7 +64,7 @@
       for (let j = 0; j < formElements.length; j++) {
         const element = formElements[j];
 
-        if (element.type !== 'submit') {
+        if (element.type !== 'submit' && !!element.name) {
           let paramName = element.name
           !paramNameSet.some(param => param === paramName) && paramNameSet.push(paramName);
         }
