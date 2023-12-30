@@ -103,6 +103,7 @@ await getDomainData(baseUrl)
     return new Promise(resolve => {
       chrome.storage.local.get([domain], result => {
         pathResults = new Set(result[domain].endpoints)
+        paramNameSet = result[domain].params
         console.log(pathResults ,'testtttttttttttttttttttttttttttttttttttttttttttttt');
         resolve(result[domain]);
       });
