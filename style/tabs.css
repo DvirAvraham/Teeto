@@ -21,9 +21,6 @@
     transition: background-color 0.3s;
 }
 
-.tab-button:hover {
-}
-
 .tab-button.active {
     background-color: #FFFFFF;
     color: rgb(44, 43, 43);

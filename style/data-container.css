@@ -72,7 +72,6 @@
     font-size: 0.8rem;
 }
 
-/* Search Input Style */
 .search-input {
     width: 100%;
     padding: 2px 5px;
@@ -91,3 +90,4 @@
     /* box-shadow: 0 0 8px rgba(74, 144, 226, 0.5); */
     box-shadow: none;
 }
+
