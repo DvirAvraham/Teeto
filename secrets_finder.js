@@ -38,9 +38,10 @@
     { "Twitter Access Token": "[t|T][w|W][i|I][t|T][t|T][e|E][r|R].*[1-9][0-9]+-[0-9a-zA-Z]{40}" },
     { "Twitter OAuth": "[t|T][w|W][i|I][t|T][t|T][e|E][r|R].*['|\"][0-9a-zA-Z]{35},44}['|\"]" }
   ]
+  const baseUrl = extractDomain(window.location.origin)
 
-  const secretsResults = new Set;
-
+  let secretsResults = new Set;
+  getDomainData(baseUrl)
   function addSecret(secretToAdd) {
     if (!isExist(secretToAdd.secret)) {
       secretsResults.add({ name: secretToAdd.name, secret: secretToAdd.secret });
@@ -97,6 +98,28 @@
     chrome.runtime.sendMessage({ action: "returnSecrets", data: writeResults() });
   });
 
+
+  async function getDomainData(domain) {
+    return new Promise(resolve => {
+      chrome.storage.local.get([domain], result => {
+        secretsResults =  new Set(result[domain].secrets)
+        console.log('secretsResults',secretsResults);
+        resolve(result[domain]);
+      });
+    });
+  }
+
 })();
+
+function extractDomain(url) {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.hostname;
+  } catch (error) {
+    console.error('Error parsing URL:', error);
+    // Handle error appropriately
+    return null;
+  }
+}
 
 

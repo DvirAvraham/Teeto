@@ -168,7 +168,7 @@ async function executeEndpointFinder(tabId) {
   try {
     await chrome.scripting.executeScript({
       target: { tabId: tabId },
-      files: ['endpoint_finder.js']
+      files: ['endpoint_finder.js'],      
     });
     console.log('Endpoint Finder Script Executed');
   } catch (error) {

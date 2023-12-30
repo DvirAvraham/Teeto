@@ -1,4 +1,4 @@
-(function () {
+(async function () {
   let paramNameSet = [];
   let scripts = document.getElementsByTagName("script");
   let pageContent = document.documentElement.outerHTML;
@@ -8,9 +8,11 @@
 
   let regexList = [regex1, regex2, regex3];
 
-  const pathResults = new Set;
-  const baseUrl = window.location.origin;
+  let pathResults = new Set;
+  const baseUrl = extractDomain(window.location.origin)
   const nodeModulesRegex = /node_modules/;
+
+await getDomainData(baseUrl)
 
   function addPath(path, source) {
     let absoluteUrl = path.startsWith('/') ? baseUrl + path : path;
@@ -97,6 +99,16 @@
     return output;
   }
 
+  async function getDomainData(domain) {
+    return new Promise(resolve => {
+      chrome.storage.local.get([domain], result => {
+        pathResults = new Set(result[domain].endpoints)
+        paramNameSet = result[domain].params
+        resolve(result[domain]);
+      });
+    });
+  }
+
   new Promise(resolve => setTimeout(resolve, 3e3)).then(() =>
     chrome.runtime.sendMessage({ action: "returnResults", data: writeResults(), params: paramNameSet }))
 
@@ -116,5 +128,16 @@ function deleteTrailingSlashes(url) {
 function isItSlashe(url) {
   const regex = /^[\/\\]+$/;
   return regex.test(url);
+}
+
+function extractDomain(url) {
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.hostname;
+  } catch (error) {
+    console.error('Error parsing URL:', error);
+    // Handle error appropriately
+    return null;
+  }
 }
 
