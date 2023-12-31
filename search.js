@@ -29,10 +29,12 @@ function setupSearch(inputId, resultsContainerId) {
     document.getElementById(inputId).addEventListener('input', function (e) {
         const searchQuery = e.target.value.toLowerCase();
         const resultsElements = document.querySelectorAll(`#${resultsContainerId} div`);
-        resultsElements.forEach(elem => {
+        console.log('!!resultsElements?.sretgserserydrtyhrdtyhlength',resultsElements);
+            resultsElements.forEach(elem => {
             const text = elem.textContent.toLowerCase();
-            elem.style.display = text.includes(searchQuery) ? '' : 'none';
-        });
+             elem.style.display = text.includes(searchQuery) ? '' : 'none' 
+            });
+console.log('resultsElementsresultsElementsresultsElementsresultsElements',Array.from(resultsElements).some(elem=>elem.style.display !== 'none'));
     });
 }
 
