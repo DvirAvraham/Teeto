@@ -35,10 +35,12 @@ In cases where Teeto seems to be stuck during a scan, particularly on webpages w
 <!-- 
 ## License
 [Include details about the license here. For example: This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.]
+-->
 
 ## Contact
-For support or feedback, please contact [Your Contact Information - could be an email, Twitter handle, etc.]
+For support or feedback, please contact dodir.sec@gmail.com
 
+<!-- 
 ## Acknowledgements
 Special thanks to [Contributors/Supporters] for their contributions to this project.
 -->
