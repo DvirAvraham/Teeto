@@ -27,7 +27,7 @@ To install Teeto on Chrome:
 Simply click on the Teeto icon in your browser toolbar and hit the 'Scan' button. Allow the extension to process the webpage data. Note: Do not close the extension during a scan as it may interrupt the process.
 
 ## Compatibility
-Currently, Teeto is compatible exclusively with Google Chrome.
+Teeto is currently compatible exclusively with Google Chrome. It is particularly well-suited for medium to small-scale web applications, considering its optimized performance in environments with a smaller number of files, such as those typically found in the Chrome environment.
 
 ## Troubleshooting
 In cases where Teeto seems to be stuck during a scan, particularly on webpages with a large number of files, consider refreshing the page or restarting the scan. This issue typically arises due to the intensive nature of the scanning process on content-rich sites.
