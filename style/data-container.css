@@ -1,6 +1,5 @@
 .data-container {
     padding: 10px 20px 10px 20px;
-
 }
 
 .domain-name {
@@ -70,6 +69,10 @@
     bottom: 13%;
     right: 4%;
     font-size: 0.8rem;
+}
+
+.search{
+    margin-top: 20px;
 }
 
 .search-input {
