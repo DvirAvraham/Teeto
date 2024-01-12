@@ -22,7 +22,7 @@ await getDomainData(baseUrl)
     absoluteUrl = deleteTrailingSlashes(absoluteUrl)
     const exists = Array.from(pathResults).some(result => result.endpoint === absoluteUrl);
     if (!nodeModulesRegex.test(absoluteUrl) && !exists) {
-      pathResults.add({ endpoint: absoluteUrl, source: source });
+      pathResults.add({ endpoint: window.location.protocol+'//'+absoluteUrl, source: source });
     }
   }
 
