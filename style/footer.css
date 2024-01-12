@@ -30,7 +30,6 @@
     display: flex;
     align-items: center;
     padding: 2px 5px;
-    /* padding: 2px 5px 2px 0; */
     margin-right: 18px;
     text-decoration: none;
     font-size: 12px;
@@ -45,5 +44,5 @@
 }
 
 .donate-img {
-font-size: 16px;
+    font-size: 16px;
 }
