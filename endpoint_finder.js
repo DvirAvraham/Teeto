@@ -1,5 +1,8 @@
 (async function () {
+
   let paramNameSet = [];
+  let pathResults = new Set;
+
   let scripts = document.getElementsByTagName("script");
   let pageContent = document.documentElement.outerHTML;
   let regex1 = /(?<=(\"|\'|\`))\/[a-zA-Z0-9_?&=\/\-\#\.]*(?=(\"|\'|\`))/g;
@@ -8,7 +11,6 @@
 
   let regexList = [regex1, regex2, regex3];
 
-  let pathResults = new Set;
   const baseUrl = extractDomain(window.location.origin)
   const nodeModulesRegex = /node_modules/;
 
@@ -112,10 +114,6 @@ await getDomainData(baseUrl)
     const curRef=  window.location.href
     getUrlParams(curRef)
     chrome.runtime.sendMessage({ action: "returnResults", data: writeResults(), params: paramNameSet })})
-
-  // new Promise(resolve => setTimeout(resolve, 6e3)).then(() =>
-  //   chrome.runtime.sendMessage({ action: "returnParams", data: paramNameSet }))
-
 })();
 
 function deleteTrailingSlashes(url) {
