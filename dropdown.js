@@ -102,7 +102,7 @@ function openAllUrls(endpoints) {
     return;
   }
   endpoints.forEach(endpoint => {
-    chrome.tabs.create({ url: 'https://'+endpoint.endpoint });
+    chrome.tabs.create({ url: endpoint.endpoint });
   }
   );
 }

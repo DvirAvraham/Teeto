@@ -327,7 +327,7 @@ function appendEndpointToResultsDiv(endpointObj, resultsDiv) {
   var a = document.createElement('a');
   a.classList.add('url-link');
   a.textContent = endpointObj.endpoint;
-  a.href = 'https://'+endpointObj.endpoint;
+  a.href = endpointObj.endpoint;
   a.target= '_blank"'
   a.addEventListener('click', function (e) {
     e.preventDefault();
