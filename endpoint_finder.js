@@ -24,7 +24,6 @@ await getDomainData(baseUrl)
     }
   }
 
-
   function fetchAndTestRegex(scriptSrc) {
     fetch(scriptSrc)
       .then(function (response) {
@@ -109,8 +108,10 @@ await getDomainData(baseUrl)
     });
   }
 
-  new Promise(resolve => setTimeout(resolve, 3e3)).then(() =>
-    chrome.runtime.sendMessage({ action: "returnResults", data: writeResults(), params: paramNameSet }))
+  new Promise(resolve => setTimeout(resolve, 3e3)).then(() =>{
+    const curRef=  window.location.href
+    getUrlParams(curRef)
+    chrome.runtime.sendMessage({ action: "returnResults", data: writeResults(), params: paramNameSet })})
 
   // new Promise(resolve => setTimeout(resolve, 6e3)).then(() =>
   //   chrome.runtime.sendMessage({ action: "returnParams", data: paramNameSet }))
